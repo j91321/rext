@@ -1,0 +1,6 @@
+================================
+REXT:Router EXploitation Toolkit
+Author:Ján Trenčanský
+Version:0.0
+License:
+================================

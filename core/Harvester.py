@@ -1,13 +1,27 @@
+#This file is part of REXT
+#core.Harvester.py - super class for harvester scripts
+#Author: Ján Trenčanský
+#License: ADD LATER
+
 import cmd
+import core.globals
+import core.utils
+
 
 class RextHarvester(cmd.Cmd):
     def __init__(self):
-        print(self)
-        self.prompt = ">"
-        self.cmdloop()
         cmd.Cmd.__init__(self)
-    def do_exit(self,e):
+        core.utils.change_prompt(self, core.globals.active_module_path + core.globals.active_script)
+        self.cmdloop()
+
+    def do_exit(self, e):
         return True
-    def do_harvest(self):
+
+    def do_run(self, e):
         pass
-        
+
+    def help_exit(self):
+        print("Exit script")
+
+    def help_run(self, e):
+        print("Run script")

