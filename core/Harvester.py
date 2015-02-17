@@ -4,14 +4,15 @@
 #License: ADD LATER
 
 import cmd
+
 import core.globals
-import core.utils
+import interface.utils
 
 
 class RextHarvester(cmd.Cmd):
     def __init__(self):
         cmd.Cmd.__init__(self)
-        core.utils.change_prompt(self, core.globals.active_module_path + core.globals.active_script)
+        interface.utils.change_prompt(self, core.globals.active_module_path + core.globals.active_script)
         self.cmdloop()
 
     def do_exit(self, e):

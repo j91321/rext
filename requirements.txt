@@ -1,1 +1,2 @@
 httplib2==0.9
+requests==2.5.1

@@ -7,6 +7,12 @@ import os
 import re
 
 
+def validate_mac(mac):
+    xr = re.compile(r'^([a-fA-F0-9]{2}([:-]?)[a-fA-F0-9]{2}(\2[a-fA-F0-9]{2}){4})$')
+    rr = xr.match(mac)
+    return rr
+
+
 def list_dirs(path):
     """
     List directories in specified path

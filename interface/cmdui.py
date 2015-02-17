@@ -4,10 +4,10 @@
 #License: ADD LATER
 
 import cmd
-import core.utils
+
+import interface.utils
 import core.globals
 import core.Harvester
-
 from core import loader
 
 
@@ -28,14 +28,14 @@ class Interpreter(cmd.Cmd):
             self.intro = banner
             file.close()
         #Load list of available modules in modules
-        module_directory_names = core.utils.list_dirs("./modules")  # List directories in module directory
+        module_directory_names = interface.utils.list_dirs("./modules")  # List directories in module directory
         for module_name in module_directory_names:
             path = "./modules/" + module_name
-            vendors = core.utils.list_dirs(path)
+            vendors = interface.utils.list_dirs(path)
             vendors_dict = {}
             for vendor in vendors:
                 vendor_path = path + "/" + vendor
-                files = core.utils.list_files(vendor_path)
+                files = interface.utils.list_files(vendor_path)
                 vendors_dict[vendor] = files
             self.modules[module_name] = vendors_dict
 
@@ -74,7 +74,7 @@ class Interpreter(cmd.Cmd):
         if isinstance(self.active_module, set):
             core.globals.active_script = module
             module_path = core.globals.active_module_path + module
-            self.active_module_import_name = core.utils.make_import_name(module_path)
+            self.active_module_import_name = interface.utils.make_import_name(module_path)
             loader.load_module(self.active_module_import_name)  # Module is loaded and executed
             loader.delete_module(self.active_module_import_name)  # Module is unloaded so it can be used again
             core.globals.active_module_import_name = ""
@@ -82,11 +82,11 @@ class Interpreter(cmd.Cmd):
             if module in self.active_module.keys():
                 self.active_module = self.active_module.get(module)
                 core.globals.active_module_path += module + "/"
-                core.utils.change_prompt(self, core.globals.active_module_path)
+                interface.utils.change_prompt(self, core.globals.active_module_path)
 
     def do_unload(self, e):
         core.globals.active_module = self.modules
-        core.utils.change_prompt(self, None)
+        interface.utils.change_prompt(self, None)
         core.globals.active_module_path = ""
 
     #Help to commands section

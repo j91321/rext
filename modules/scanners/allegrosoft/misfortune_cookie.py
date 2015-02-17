@@ -10,6 +10,7 @@
 import core.Scanner
 
 import httplib2
+import socket
 import re
 
 
@@ -28,7 +29,7 @@ class Scanner(core.Scanner.RextScanner):
                    'Cache-Control': 'no-cache',
                    'Cookie': 'C107373883=/omg1337hax'}
         target = 'http://' + self.host + ":" + self.port + '/blabla'
-        h = httplib2.Http(timeout=90)
+        h = httplib2.Http(timeout=60)
         h.follow_all_redirects = True
         try:
             response, content = h.request(target, 'GET', headers=headers)
@@ -48,7 +49,7 @@ class Scanner(core.Scanner.RextScanner):
                         print("RomPager not detected, device is running: ", server)
                 else:
                     print("Not running RomPager")
-        except TimeoutError:
+        except socket.timeout:  # Is there a better way of handling timeout in httplib2?
             print("Timeout!")
 
 Scanner()

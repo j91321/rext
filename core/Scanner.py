@@ -4,8 +4,9 @@
 #License: ADD LATER
 
 import cmd
+
 import core.globals
-import core.utils
+import interface.utils
 
 
 class RextScanner(cmd.Cmd):
@@ -14,7 +15,7 @@ class RextScanner(cmd.Cmd):
 
     def __init__(self):
         cmd.Cmd.__init__(self)
-        core.utils.change_prompt(self, core.globals.active_module_path + core.globals.active_script)
+        interface.utils.change_prompt(self, core.globals.active_module_path + core.globals.active_script)
         self.cmdloop()
 
     def do_exit(self, e):
@@ -26,7 +27,7 @@ class RextScanner(cmd.Cmd):
     def do_set(self, e):
         args = e.split(' ')
         if args[0] == "host":
-            self.host = args[1]
+            self.host = args[1]  # TODO: Add IP address and port validation
         elif args[0] == "port":
             self.port = args[1]
 
@@ -47,3 +48,6 @@ class RextScanner(cmd.Cmd):
 
     def help_port(self):
         print("Prints current value of port")
+
+    def help_set(self):
+        print("Set value of variable: \"set host 192.168.1.1\"")

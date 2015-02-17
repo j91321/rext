@@ -1,0 +1,18 @@
+#This file is part of REXT
+#core.io.py - Input / Output utils, for writing files and databases
+#Author: Ján Trenčanský
+#License: ADD LATER
+
+import datetime
+import os
+import core.globals
+
+
+def writefile(stream, filename):
+    dirpath = "output/" + core.globals.active_script + "_" + datetime.datetime.today().isoformat()
+    try:
+        if not os.path.exists(dirpath):
+            os.mkdir(dirpath)
+            open(dirpath + "/" + filename, 'wb').write(stream)
+    except OSError:
+        print("Unable to create directory")
