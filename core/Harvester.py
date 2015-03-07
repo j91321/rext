@@ -7,6 +7,7 @@ import cmd
 
 import core.globals
 import interface.utils
+from interface.messages import print_help
 
 
 class RextHarvester(cmd.Cmd):
@@ -22,7 +23,7 @@ class RextHarvester(cmd.Cmd):
         pass
 
     def help_exit(self):
-        print("Exit script")
+        print_help("Exit script")
 
     def help_run(self, e):
-        print("Run script")
+        print_help("Run script")

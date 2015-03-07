@@ -12,6 +12,7 @@
 import core.Misc
 import core.io
 from interface.utils import validate_mac
+from interface.messages import print_success, print_error, print_help, print_green
 
 import re
 import hashlib
@@ -29,26 +30,27 @@ class Misc(core.Misc.RextMisc):
             if validate_mac(args[1]):
                 self.mac = args[1]
             else:
-                print("Error: provide proper MAC address")
+                print_error("provide valid MAC address")
 
     def do_mac(self, e):
         print(self.mac)
 
     def help_set(self):
-        print("Set value of variable: \"set mac 00:11:22:33:44:55\"")
+        print_help("Set value of variable: \"set mac 00:11:22:33:44:55\"")
 
     def help_mac(self):
-        print("Prints value of variable MAC")
+        print_help("Prints value of variable MAC")
 
     def do_run(self, e):
         mac_str = re.sub(r'[^a-fA-F0-9]', '', self.mac)
         bytemac = bytearray.fromhex(mac_str)
-        print('based on rg_mac:\nSSID: PBS-%02X%02X%02X' % (bytemac[3], bytemac[4], bytemac[5]))
-        print('WPA key: %s\n' % (self.gen_key(bytemac)))
+        print_success("")
+        print_green('based on rg_mac:\nSSID: PBS-%02X%02X%02X' % (bytemac[3], bytemac[4], bytemac[5]))
+        print_green('WPA key: %s\n' % (self.gen_key(bytemac)))
 
         bytemac[5] -= 5
-        print('based on BSSID:\nSSID: PBS-%02X%02X%02X' % (bytemac[3], bytemac[4], bytemac[5]))
-        print('WPA key: %s\n' % (self.gen_key(bytemac)))
+        print_green('based on BSSID:\nSSID: PBS-%02X%02X%02X' % (bytemac[3], bytemac[4], bytemac[5]))
+        print_green('WPA key: %s\n' % (self.gen_key(bytemac)))
 
     #This part is work of Stefan Viehboeck (ported to py3)
     def gen_key(self, mac):

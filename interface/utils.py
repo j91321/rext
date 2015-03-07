@@ -5,12 +5,28 @@
 
 import os
 import re
+import socket
 
 
 def validate_mac(mac):
     xr = re.compile(r'^([a-fA-F0-9]{2}([:-]?)[a-fA-F0-9]{2}(\2[a-fA-F0-9]{2}){4})$')
     rr = xr.match(mac)
     return rr
+
+
+def validate_ipv4(ip):
+    try:
+        socket.inet_aton(ip)
+        return True
+    except socket.error:
+        return False
+
+
+def file_exists(file):  # I know this is useless wrapper but it's probably better not to import os everywhere
+    if os.path.isfile(file):
+        return True
+    else:
+        return False
 
 
 def list_dirs(path):
@@ -49,3 +65,13 @@ def change_prompt(interpreter, path):
         interpreter.prompt = path + ">"
     else:
         interpreter.prompt = ">"
+
+
+def identify_os():
+    if os.name == "nt":
+        operating_system = "windows"
+    elif os.name == "posix":
+        operating_system = "posix"
+    else:
+        operating_system = "unknown"
+    return operating_system

@@ -9,6 +9,7 @@ import interface.utils
 import core.globals
 import core.Harvester
 from core import loader
+from interface.messages import print_error, print_help
 
 
 class Interpreter(cmd.Cmd):
@@ -18,6 +19,7 @@ class Interpreter(cmd.Cmd):
     active_module_import_name = ""
 
     def __init__(self):
+        loader.check_dependencies()
         cmd.Cmd.__init__(self)
         self.prompt = ">"
         #Load banner
@@ -68,7 +70,7 @@ class Interpreter(cmd.Cmd):
             for key in self.active_module.get(module):
                 print(key)
         else:
-            print("Invalid argument for command show", module)
+            print_error("Invalid argument for command show " + module)
 
     def do_load(self, module):
         if isinstance(self.active_module, set):
@@ -76,27 +78,32 @@ class Interpreter(cmd.Cmd):
             module_path = core.globals.active_module_path + module
             self.active_module_import_name = interface.utils.make_import_name(module_path)
             loader.load_module(self.active_module_import_name)  # Module is loaded and executed
-            loader.delete_module(self.active_module_import_name)  # Module is unloaded so it can be used again
+            try:
+                loader.delete_module(self.active_module_import_name)  # Module is unloaded so it can be used again
+            except ValueError:
+                pass
             core.globals.active_module_import_name = ""
         elif isinstance(self.active_module, dict):
             if module in self.active_module.keys():
                 self.active_module = self.active_module.get(module)
                 core.globals.active_module_path += module + "/"
                 interface.utils.change_prompt(self, core.globals.active_module_path)
+            else:
+                print_error(module + " not found")
 
     def do_unload(self, e):
-        core.globals.active_module = self.modules
+        self.active_module = self.modules
         interface.utils.change_prompt(self, None)
         core.globals.active_module_path = ""
 
     #Help to commands section
 
     def help_show(self):
-        print("List available modules and vendors:")
+        print_help("List available modules and vendors")
 
     def help_load(self):
-        print("load command help")
+        print_help("load command help")
 
     def help_exit(self):
-        print("Exit REXT")
+        print_help("Exit REXT")
 

@@ -8,6 +8,7 @@
 #Description: PoC based on 31C3 presentation
 
 import core.Scanner
+from interface.messages import print_failed, print_success, print_red, print_green, print_warning, print_error
 
 import httplib2
 import socket
@@ -34,22 +35,23 @@ class Scanner(core.Scanner.RextScanner):
         try:
             response, content = h.request(target, 'GET', headers=headers)
             if response.status != 404:
-                print("Unexpected HTTP status, expecting 404 got: ", response.status)
-                print("Device is not running RomPager")
+                print_failed("Unexpected HTTP status, expecting 404 got: %d" % response.status)
+                print_red("Device is not running RomPager")
             else:
                 if 'server' in response.keys():
                     server = response.get('server')
                     if re.search('RomPager', server) is not None:
-                        print("Got RomPager! Server:", server)
+                        print_green("Got RomPager! Server:%s" % server)
                         if re.search('omg1337hax', content.decode()) is not None:
-                            print("Success! Device is vulnerable to misfortune cookie")
+                            print_success("device is vulnerable to misfortune cookie")
                         else:
-                            print("Failed!, Test didn't pass. Device MAY still be vulnerable")
+                            print_failed("test didn't pass.")
+                            print_warning("Device MAY still be vulnerable")
                     else:
-                        print("RomPager not detected, device is running: ", server)
+                        print_failed("RomPager not detected, device is running: %s " % server)
                 else:
-                    print("Not running RomPager")
+                    print_failed("Not running RomPager")
         except socket.timeout:  # Is there a better way of handling timeout in httplib2?
-            print("Timeout!")
+            print_error("Timeout!")
 
 Scanner()

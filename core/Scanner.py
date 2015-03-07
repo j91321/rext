@@ -7,6 +7,7 @@ import cmd
 
 import core.globals
 import interface.utils
+from interface.messages import print_help, print_error
 
 
 class RextScanner(cmd.Cmd):
@@ -27,9 +28,15 @@ class RextScanner(cmd.Cmd):
     def do_set(self, e):
         args = e.split(' ')
         if args[0] == "host":
-            self.host = args[1]  # TODO: Add IP address and port validation
+            if interface.utils.validate_ipv4(args[1]):
+                self.host = args[1]
+            else:
+                print_error("please provide valid IPv4 address")
         elif args[0] == "port":
-            self.port = args[1]
+            if isinstance(args[1], int):
+                self.port = args[1]
+            else:
+                print_error("port value must be integer")
 
     def do_host(self, e):
         print(self.host)
@@ -38,16 +45,16 @@ class RextScanner(cmd.Cmd):
         print(self.port)
 
     def help_exit(self):
-        print("Exit script")
+        print_help("Exit script")
 
-    def help_run(self, e):
-        print("Run script")
+    def help_run(self):
+        print_help("Run script")
 
     def help_host(self):
-        print("Prints current value of host")
+        print_help("Prints current value of host")
 
     def help_port(self):
-        print("Prints current value of port")
+        print_help("Prints current value of port")
 
     def help_set(self):
-        print("Set value of variable: \"set host 192.168.1.1\"")
+        print_help("Set value of variable: \"set host 192.168.1.1\"")

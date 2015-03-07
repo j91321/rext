@@ -6,6 +6,7 @@
 import datetime
 import os
 import core.globals
+from interface.messages import print_error
 
 
 def writefile(stream, filename):
@@ -14,5 +15,6 @@ def writefile(stream, filename):
         if not os.path.exists(dirpath):
             os.mkdir(dirpath)
             open(dirpath + "/" + filename, 'wb').write(stream)
+            return dirpath
     except OSError:
-        print("Unable to create directory")
+        print_error("Unable to create directory")

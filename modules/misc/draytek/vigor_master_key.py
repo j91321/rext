@@ -10,6 +10,7 @@
 
 import core.Misc
 import core.io
+from interface.messages import print_success, print_error, print_green, print_help
 from interface.utils import validate_mac
 
 import re
@@ -28,21 +29,22 @@ class Misc(core.Misc.RextMisc):
             if validate_mac(args[1]):
                 self.mac = args[1]
             else:
-                print("Error: provide proper MAC address")
+                print_error("please provide valid MAC address")
 
     def do_mac(self, e):
         print(self.mac)
 
     def help_set(self):
-        print("Set value of variable: \"set mac 00:11:22:33:44:55\"")
+        print_help("Set value of variable: \"set mac 00:11:22:33:44:55\"")
 
     def help_mac(self):
-        print("Prints value of variable MAC")
+        print_help("Prints value of variable MAC")
 
     def do_run(self, e):
         xmac = unhexlify(bytes(re.sub('[:\-]', '', self.mac), 'UTF-8'))
-        print("Username: Admin")
-        print("Password:", self.spkeygen(xmac))
+        print_success("credentials generated")
+        print_green("Username: Admin")
+        print_green("Password: " + self.spkeygen(xmac))
 
     #This is a port for py3 from draytools, original author is Nikita Abdullin
     def spkeygen(self, mac):

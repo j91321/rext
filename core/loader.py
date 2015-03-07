@@ -6,10 +6,15 @@
 #License: ADD LATER
 
 import importlib
+import importlib.util
+from interface.messages import print_error, print_warning
 
 
 def load_module(modname):
-    importlib.import_module(modname)
+    try:
+        importlib.import_module(modname)
+    except ImportError:
+        print_error("module doesn't exist")
 
 
 def delete_module(modname, paranoid=None):
@@ -40,3 +45,16 @@ def delete_module(modname, paranoid=None):
                     delattr(mod, symbol)
                 except AttributeError:
                     pass
+
+
+def check_dependencies():
+    dependency_list = open("./requirements.txt", 'rt', encoding='utf-8')
+    while True:
+        dependency = dependency_list.readline()
+        if not dependency:
+            break
+        dependency = dependency[:dependency.find('==')]
+        found = importlib.util.find_spec(dependency)
+        if found is None:
+            print_warning(dependency + " not found some modules may not work!")
+    dependency_list.close()

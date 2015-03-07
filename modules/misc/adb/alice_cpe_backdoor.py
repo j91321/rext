@@ -20,10 +20,12 @@
 import core.Misc
 import core.io
 from interface.utils import validate_mac
+from interface.messages import print_success, print_error, print_help, print_green
 
 import re
 import hashlib
 from binascii import hexlify
+
 
 class Misc(core.Misc.RextMisc):
     mac = "00:00:00:00:00"
@@ -37,22 +39,23 @@ class Misc(core.Misc.RextMisc):
             if validate_mac(args[1]):
                 self.mac = args[1]
             else:
-                print("Error: provide proper MAC address")
+                print_error("provide valid MAC address")
 
     def do_mac(self, e):
         print(self.mac)
 
     def help_set(self):
-        print("Set value of variable: \"set mac 00:11:22:33:44:55\"")
+        print_help("Set value of variable: \"set mac 00:11:22:33:44:55\"")
 
     def help_mac(self):
-        print("Prints value of variable MAC")
+        print_help("Prints value of variable MAC")
 
     def do_run(self, e):
         payload = self.keygen()
-        print("Payload:", hexlify(payload).decode())
+        print_success("")
+        print_green("Payload:%s" % (hexlify(payload).decode()))
         core.io.writefile(payload, "payload.hex")
-        print("Payload saved to payload.hex")
+        print_green("Payload saved to payload.hex")
 
     def keygen(self):
         salt = b'\x04\x07\x67\x10\x02\x81\xFA\x66\x11\x41\x68\x11\x17\x01\x05\x22\x71\x04\x10\x33'

@@ -7,6 +7,7 @@ import cmd
 
 import core.globals
 import interface.utils
+from interface.messages import print_help
 
 
 class RextMisc(cmd.Cmd):
@@ -23,7 +24,7 @@ class RextMisc(cmd.Cmd):
         pass
 
     def help_exit(self):
-        print("Exit script")
+        print_help("Exit script")
 
-    def help_run(self, e):
-        print("Run script")
+    def help_run(self):
+        print_help("Run script")
