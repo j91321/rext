@@ -1,7 +1,7 @@
 #Name:Alice Telecom Italia CPE Modem/Routers Pirelli (now ADB) backdoor hash payload generator
 #File:alice_cpe_backdoor.py
 #Author:Ján Trenčanský
-#License: ADD LATER
+#License: GNU GPL v3
 #Created: 17.2.2014
 #Last modified: 17.2.2014
 #Shodan Dork:

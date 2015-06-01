@@ -1,7 +1,7 @@
 #This file is part of REXT
 #core.Misc.py - super class for misc scripts
 #Author: Ján Trenčanský
-#License: ADD LATER
+#License: GNU GPL v3
 
 import cmd
 

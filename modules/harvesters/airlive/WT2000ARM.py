@@ -1,18 +1,11 @@
 #Name:Airlive WT-2000ARM information harvester module
 #File:WT2000ARM.py
 #Author:Ján Trenčanský
-#License: ADD LATER
+#License: GNU GPL v3
 #Created: 29.8.2013
 #Last modified: 1.9.2013
 #Shodan Dork: WWW-Authenticate: Basic realm="AirLive WT-2000ARM
 #Description:
-
-#FOR YOUR EYES ONLY! DELETE LATER!!!
-#Test subject:
-#http://88.102.197.207/basic/home_wan.htm -PPPOE credentials
-#http://88.102.197.207/basic/home_wlan.htm -WLAN Key and SSID, MAC filter
-#http://88.102.197.207/status/status_deviceinfo.htm -MAC Address location usefull for WPS
-#http://88.102.197.207/advanced/adv_firewall.htm -Might be usefull
 
 #UI
 #WEP/WPA

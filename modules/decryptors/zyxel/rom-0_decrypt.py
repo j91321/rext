@@ -1,7 +1,7 @@
 #Name:ZyNOS rom-0 config file decryption
 #File:rom-0_decrypt.py
 #Author:Ján Trenčanský
-#License: ADD LATER
+#License: GNU GPL v3
 #Created: 18.2.2014
 #Last modified: 18.2.2014
 #Shodan Dork:

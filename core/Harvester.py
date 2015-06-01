@@ -1,7 +1,7 @@
 #This file is part of REXT
 #core.Harvester.py - super class for harvester scripts
 #Author: Ján Trenčanský
-#License: ADD LATER
+#License: GNU GPL v3
 
 import cmd
 

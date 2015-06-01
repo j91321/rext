@@ -1,7 +1,7 @@
 #Name:A1/Telekom Austria PRG EAV4202N Default WPA Key Algorithm Weakness
 #File:a1_default_wpa_key.py
 #Author:Ján Trenčanský
-#License: ADD LATER
+#License: GNU GPL v3
 #Created: 17.2.2014
 #Last modified: 17.2.2014
 #Shodan Dork:

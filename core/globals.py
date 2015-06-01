@@ -1,7 +1,7 @@
 #This file is part of REXT
 #core.globals.py - cross module variables
 #Author: Ján Trenčanský
-#License: ADD LATER
+#License: GNU GPL v3
 
 #TODO: add global host and port settings
 

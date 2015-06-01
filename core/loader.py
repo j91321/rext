@@ -3,7 +3,7 @@
 #Author: Ján Trenčanský
 #delete_module was written by Michael P. Reilly
 #it was taken from https://mail.python.org/pipermail/tutor/2006-August/048596.html
-#License: ADD LATER
+#License: GNU GPL v3
 
 import importlib
 import importlib.util

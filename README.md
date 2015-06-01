@@ -15,9 +15,14 @@ Small toolkit for easy creation and usage of various python scripts that work wi
     - scanners
 - output - output goes here
 
+This is still heavy work-in progress
 
 Requirements
 ============
 I am trying to keep the requirements minimal:
 
 - httplib2
+
+License
+=======
+This software is licensed under GNU GPL v3. For more information please see LICENSE file

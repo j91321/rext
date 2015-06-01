@@ -1,7 +1,7 @@
 #This file is part of REXT
 #core.messages.py - script containing colors and messages
 #Author: Ján Trenčanský
-#License: ADD LATER
+#License: GNU GPL v3
 #Based on http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python
 from interface.utils import identify_os
 
@@ -62,3 +62,7 @@ def print_yellow(msg):
 
 def print_red(msg):
     print(Color.RED + msg + Color.ENDC)
+
+
+def print_purple(msg):
+    print(Color.PURPLE + msg + Color.ENDC)

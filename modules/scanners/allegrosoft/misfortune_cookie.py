@@ -1,7 +1,7 @@
 #Name:Misfortune Cookie vulnerability scanner
 #File:misfortune_cookie.py
 #Author:Ján Trenčanský
-#License: ADD LATER
+#License: GNU GPL v3
 #Created: 4.2.2014
 #Last modified: 4.2.2014
 #Shodan Dork:

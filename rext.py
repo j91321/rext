@@ -3,7 +3,7 @@
 #Router EXploitation Toolkit
 #rext.py - Startup script
 #Author: Ján Trenčanský
-#License: ADD LATER
+#License: GNU GPL v3
 
 import interface.cmdui
 

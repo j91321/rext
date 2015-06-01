@@ -1,7 +1,7 @@
 #This file is part of REXT
 #cmdui.py - command line interface script
 #Author: Ján Trenčanský
-#License: ADD LATER
+#License: GNU GPL v3
 
 import cmd
 
