@@ -6,12 +6,26 @@
 import os
 import re
 import socket
+import sqlite3
 
 
 def validate_mac(mac):
     xr = re.compile(r'^([a-fA-F0-9]{2}([:-]?)[a-fA-F0-9]{2}(\2[a-fA-F0-9]{2}){4})$')
     rr = xr.match(mac)
     return rr
+
+
+def lookup_mac(mac):
+    #TODO: better DB connection and cursor handling, index over oui maybe
+    mac = mac.replace(":", "")
+    mac = mac.replace("-", "")
+    connection = sqlite3.connect("./databases/oui.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT name FROM oui WHERE oui == ?", [mac[:6]])
+    company = "(" + (cursor.fetchone())[0] + ")"
+    connection.close()
+    return company
+
 
 
 def validate_ipv4(ip):
