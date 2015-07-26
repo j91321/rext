@@ -7,7 +7,6 @@ import cmd
 
 import interface.utils
 import core.globals
-import core.Harvester
 from core import loader
 from interface.messages import print_error, print_help
 
@@ -20,6 +19,9 @@ class Interpreter(cmd.Cmd):
 
     def __init__(self):
         loader.check_dependencies()
+        core.globals.ouidb_conn = loader.open_database("./databases/oui.db")
+        if core.globals.ouidb_conn is None:
+            print_error("OUI database could not be open, please provide OUI database")
         cmd.Cmd.__init__(self)
         self.prompt = ">"
         #Load banner
@@ -48,6 +50,7 @@ class Interpreter(cmd.Cmd):
         print("Bye!")
 
     def do_exit(self, args):
+        loader.close_database(core.globals.ouidb_conn)
         return True
 
     #Interpreter commands section

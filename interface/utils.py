@@ -6,7 +6,7 @@
 import os
 import re
 import socket
-import sqlite3
+import core.globals
 
 
 def validate_mac(mac):
@@ -16,16 +16,17 @@ def validate_mac(mac):
 
 
 def lookup_mac(mac):
-    #TODO: better DB connection and cursor handling, index over oui maybe
+    #TODO: Maybe add index over oui table
     mac = mac.replace(":", "")
     mac = mac.replace("-", "")
-    connection = sqlite3.connect("./databases/oui.db")
-    cursor = connection.cursor()
+    cursor = core.globals.ouidb_conn.cursor()
     cursor.execute("SELECT name FROM oui WHERE oui == ?", [mac[:6]])
-    company = "(" + (cursor.fetchone())[0] + ")"
-    connection.close()
-    return company
-
+    company_name = (cursor.fetchone())
+    if company_name is not None:
+        company_name = company_name[0]
+        return "(" + company_name + ")"
+    else:
+        return "(Unknown)"
 
 
 def validate_ipv4(ip):

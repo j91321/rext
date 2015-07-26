@@ -11,7 +11,7 @@
 
 import core.Misc
 import core.io
-from interface.utils import validate_mac
+from interface.utils import validate_mac, lookup_mac
 from interface.messages import print_success, print_error, print_help, print_green
 
 import re
@@ -29,6 +29,7 @@ class Misc(core.Misc.RextMisc):
         if args[0] == "mac":
             if validate_mac(args[1]):
                 self.mac = args[1]
+                print_green("MAC set to: " + self.mac + " " + lookup_mac(self.mac))
             else:
                 print_error("provide valid MAC address")
 

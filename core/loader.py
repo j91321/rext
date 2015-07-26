@@ -7,6 +7,8 @@
 
 import importlib
 import importlib.util
+import sqlite3
+import interface.utils
 from interface.messages import print_error, print_warning
 
 
@@ -58,3 +60,16 @@ def check_dependencies():
         if found is None:
             print_warning(dependency + " not found some modules may not work!")
     dependency_list.close()
+
+
+def open_database(path):
+    if interface.utils.file_exists(path):
+        connection = sqlite3.connect(path)
+        return connection
+    else:
+        return None
+
+
+def close_database(connection):
+    connection.close()
+

@@ -7,3 +7,6 @@
 
 active_module_path = ""
 active_script = ""
+
+#Database connections
+ouidb_conn = None
