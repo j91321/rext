@@ -52,6 +52,10 @@ def print_help(msg):
     print(Color.PURPLE + Color.BOLD + "Help: " + Color.ENDC + Color.PURPLE + msg + Color.ENDC)
 
 
+def print_info(msg):
+    print(Color.BLUE + Color.BOLD + "Info: " + Color.ENDC + Color.BLUE + msg + Color.ENDC)
+
+
 def print_green(msg):
     print(Color.GREEN + msg + Color.ENDC)
 
@@ -66,3 +70,7 @@ def print_red(msg):
 
 def print_purple(msg):
     print(Color.PURPLE + msg + Color.ENDC)
+
+
+def print_blue(msg):
+    print(Color.BLUE + msg + Color.ENDC)

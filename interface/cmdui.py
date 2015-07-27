@@ -8,7 +8,8 @@ import cmd
 import interface.utils
 import core.globals
 from core import loader
-from interface.messages import print_error, print_help
+from core import updater
+from interface.messages import print_error, print_help, print_blue
 
 
 class Interpreter(cmd.Cmd):
@@ -99,6 +100,19 @@ class Interpreter(cmd.Cmd):
         interface.utils.change_prompt(self, None)
         core.globals.active_module_path = ""
 
+    def do_update(self, e):
+        args = e.split(' ')
+        if args[0] == "oui":
+            print_blue("Updating OUI DB (not implemented)")
+            updater.update_oui()
+        elif args[0] == "force":
+            print_blue("Discarding local changes and updating REXT")
+            updater.update_rext_force()
+        elif args[0] == "":
+            print_blue("Updating REXT please wait...")
+            updater.update_rext()
+            print_blue("Update successful")
+
     #Help to commands section
 
     def help_show(self):
@@ -106,6 +120,9 @@ class Interpreter(cmd.Cmd):
 
     def help_load(self):
         print_help("load command help")
+
+    def help_update(self):
+        print_help("update command help")
 
     def help_exit(self):
         print_help("Exit REXT")
