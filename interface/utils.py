@@ -6,6 +6,7 @@
 import os
 import re
 import socket
+import requests
 import core.globals
 
 
@@ -90,3 +91,16 @@ def identify_os():
     else:
         operating_system = "unknown"
     return operating_system
+
+
+#Basic file download using requests, more sophisticated implementation would be nice
+def wget(url, path):
+    #TODO change this to streaming request
+    request = requests.get(url)
+    if request.status_code == requests.codes.ok:
+        file = open(path, "w")
+        file.write(request.text)
+        file.close()
+        return True
+    else:
+        return False

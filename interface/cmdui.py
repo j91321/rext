@@ -103,8 +103,11 @@ class Interpreter(cmd.Cmd):
     def do_update(self, e):
         args = e.split(' ')
         if args[0] == "oui":
-            print_blue("Updating OUI DB (not implemented)")
+            print_blue("Updating OUI DB. Database rebuild may take several minutes.")
+            #print_blue("Do you wish to continue? (y/n)")
+            #Add if here
             updater.update_oui()
+            print_blue("OUI database updated successfully.")
         elif args[0] == "force":
             print_blue("Discarding local changes and updating REXT")
             updater.update_rext_force()
