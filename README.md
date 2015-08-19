@@ -31,7 +31,6 @@ Requirements
 ============
 I am trying to keep the requirements minimal:
 
-- httplib2 (I decided to ditch httplib2 in favour of requests)
 - requests
 
 License

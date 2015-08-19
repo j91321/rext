@@ -1,6 +1,8 @@
 ================================
 REXT:Router EXploitation Toolkit
 Author:Ján Trenčanský
+Email:jan.trencansky(at)gmail.com
+Twitter:@j91321
 Version:0.0
 License:GNU GPL v3
 ================================

