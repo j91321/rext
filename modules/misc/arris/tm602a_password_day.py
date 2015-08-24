@@ -113,7 +113,7 @@ class Misc(core.Misc.RextMisc):
             for i in range(10):
                 list4[i] = list3[table2[num8][i]]
             for i in range(10):
-                list5[i] = (ord(seed[i]) + list4[i]) % 36
+                list5[i] = int((ord(seed[i]) + list4[i]) % 36)
 
             password_list = [""]*10
             for i in range(10):
