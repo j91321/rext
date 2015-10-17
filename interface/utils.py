@@ -1,12 +1,14 @@
-#This file is part of REXT
-#core.utils.py - script contains useful static methods
-#Author: Ján Trenčanský
-#License: GNU GPL v3
+# This file is part of REXT
+# core.utils.py - script contains useful static methods
+# Author: Ján Trenčanský
+# License: GNU GPL v3
 
 import os
 import re
 import socket
-import requests
+import sys
+import urllib
+import urllib.request
 import core.globals
 
 
@@ -17,7 +19,7 @@ def validate_mac(mac):
 
 
 def lookup_mac(mac):
-    #TODO: Maybe add index over oui table
+    # TODO: Maybe add index over oui table
     mac = mac.replace(":", "")
     mac = mac.replace("-", "")
     cursor = core.globals.ouidb_conn.cursor()
@@ -93,14 +95,23 @@ def identify_os():
     return operating_system
 
 
-#Basic file download using requests, more sophisticated implementation would be nice
+# Simple wget implementation with status bar
 def wget(url, path):
-    #TODO change this to streaming request
-    request = requests.get(url)
-    if request.status_code == requests.codes.ok:
-        file = open(path, "w")
-        file.write(request.text)
-        file.close()
-        return True
-    else:
+
+    def hook(blocks, block_size, total_size):
+        current = blocks * block_size
+        percent = 100.0 * current / total_size
+        # Found this somewhere
+        line = '[{0}{1}]'.format('=' * int(percent / 2), ' ' * (50 - int(percent / 2)))
+        status = '\r{0:3.0f}%{1} {2:3.1f}/{3:3.1f} MB'
+        sys.stdout.write(status.format(percent, line, current/1024/1024, total_size/1024/1024))
+
+    try:
+        (path, headers) = urllib.request.urlretrieve(url, path, hook)
+    except:
+        os.remove(path)
+        print()
         return False
+
+    return path
+
