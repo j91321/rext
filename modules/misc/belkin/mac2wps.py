@@ -1,12 +1,12 @@
-#Name:Belkin F5D8235-4 v1000, F5D8231-4 v5000, F9K1104 v1000 mac2wps
-#File:mac2wps.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 19.7.2015
-#Last modified: 19.7.2015
-#Shodan Dork:
-#Description: Generates WPS key for Belkin F5D8235-4 v1000, F5D8231-4 v5000, F9K1104 v1000 based on mac.
-#Based on work of ZhaoChunsheng and e.novellalorente@student.ru.nl (http://ednolo.alumnos.upv.es/?p=1295)
+# Name:Belkin F5D8235-4 v1000, F5D8231-4 v5000, F9K1104 v1000 mac2wps
+# File:mac2wps.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 19.7.2015
+# Last modified: 19.7.2015
+# Shodan Dork:
+# Description: Generates WPS key for Belkin F5D8235-4 v1000, F5D8231-4 v5000, F9K1104 v1000 based on mac.
+# Based on work of ZhaoChunsheng and e.novellalorente@student.ru.nl (http://ednolo.alumnos.upv.es/?p=1295)
 
 import core.Misc
 import core.io

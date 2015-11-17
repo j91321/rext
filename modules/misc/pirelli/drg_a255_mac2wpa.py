@@ -1,13 +1,13 @@
-#Name:Pirelli Discus DRG A225 WiFi router default WPA generator
-#File:drg_a255_mac2wpa.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 24.7.2015
-#Last modified: 24.7.2015
-#Shodan Dork:
-#Description: Generates WPS pin for Arris DG860A router based on mac
-#Based on work of Muris Kurgas
-#http://www.remote-exploit.org/content/Pirelli_Discus_DRG_A225_WiFi_router.pdf
+# Name:Pirelli Discus DRG A225 WiFi router default WPA generator
+# File:drg_a255_mac2wpa.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 24.7.2015
+# Last modified: 24.7.2015
+# Shodan Dork:
+# Description: Generates WPS pin for Arris DG860A router based on mac
+# Based on work of Muris Kurgas
+# http://www.remote-exploit.org/content/Pirelli_Discus_DRG_A225_WiFi_router.pdf
 
 import core.Misc
 import core.io

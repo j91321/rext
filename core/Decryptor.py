@@ -1,7 +1,7 @@
-#This file is part of REXT
-#core.Decryptor.py - super class for decrypt scripts
-#Author: Ján Trenčanský
-#License: GNU GPL v3
+# This file is part of REXT
+# core.Decryptor.py - super class for decrypt scripts
+# Author: Ján Trenčanský
+# License: GNU GPL v3
 
 import cmd
 

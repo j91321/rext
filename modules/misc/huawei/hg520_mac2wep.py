@@ -1,12 +1,12 @@
-#Name:Huawei HG520 mac2wepkey
-#File:hg520_mac2wep.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 14.6.2015
-#Last modified: 14.6.2015
-#Shodan Dork:
-#Description: Generates WEP Key for Huawei HG5XX based on mac. 
-#Based on work by humberto121@websec.mx - 12/2010
+# Name:Huawei HG520 mac2wepkey
+# File:hg520_mac2wep.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 14.6.2015
+# Last modified: 14.6.2015
+# Shodan Dork:
+# Description: Generates WEP Key for Huawei HG5XX based on mac.
+# Based on work by humberto121@websec.mx - 12/2010
 
 import core.Misc
 import core.io

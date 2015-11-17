@@ -1,12 +1,12 @@
-#Name:Huawei HG8245/HG8247 mac2wpakey
-#File:hg8245_mac2wpa.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 18.7.2015
-#Last modified: 18.7.2015
-#Shodan Dork:
-#Description: Generates WPA key for Huawei HG8245/HG8247 based on mac.
-#Based on function HG824x() routerpwn.com
+# Name:Huawei HG8245/HG8247 mac2wpakey
+# File:hg8245_mac2wpa.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 18.7.2015
+# Last modified: 18.7.2015
+# Shodan Dork:
+# Description: Generates WPA key for Huawei HG8245/HG8247 based on mac.
+# Based on function HG824x() routerpwn.com
 
 import core.Misc
 import core.io

@@ -1,7 +1,7 @@
-#This file is part of REXT
-#core.io.py - Input / Output utils, for writing files and databases
-#Author: Ján Trenčanský
-#License: GNU GPL v3
+# This file is part of REXT
+# core.io.py - Input / Output utils, for writing files and databases
+# Author: Ján Trenčanský
+# License: GNU GPL v3
 
 import datetime
 import os

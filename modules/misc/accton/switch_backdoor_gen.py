@@ -1,13 +1,13 @@
-#Name:Accton-based switches (3com, Dell, SMC, Foundry and EdgeCore) - Backdoor Password
-#File:switch_backdoor_gen.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 29.3.2015
-#Last modified: 29.3.2015
-#Shodan Dork:
-#Description: The Accton company builds switches, which are rebranded and sold by several manufacturers.
-#             The backdoor password can be calculated if you have the switch MAC-address.
-#             Based on http://www.exploit-db.com/exploits/14875/ and routerpwn.com
+# Name:Accton-based switches (3com, Dell, SMC, Foundry and EdgeCore) - Backdoor Password
+# File:switch_backdoor_gen.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 29.3.2015
+# Last modified: 29.3.2015
+# Shodan Dork:
+# Description: The Accton company builds switches, which are rebranded and sold by several manufacturers.
+# The backdoor password can be calculated if you have the switch MAC-address.
+# Based on http://www.exploit-db.com/exploits/14875/ and routerpwn.com
 
 import core.Misc
 import core.io

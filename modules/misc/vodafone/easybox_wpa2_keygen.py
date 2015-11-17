@@ -2,10 +2,10 @@
 # File:easybox_wpa2_keygen.py
 # Author:Ján Trenčanský
 # License: GNU GPL v3
-#Created: 13.6.2015
-#Last modified: 13.6.2015
-#Shodan Dork:
-#Description: Generates WPA2 Key for Vodafone easybox. Based on routerpwn.com easyboxwpa()
+# Created: 13.6.2015
+# Last modified: 13.6.2015
+# Shodan Dork:
+# Description: Generates WPA2 Key for Vodafone easybox. Based on routerpwn.com easyboxwpa()
 
 import core.Misc
 import core.io

@@ -1,13 +1,13 @@
-#Name:ARRIS DG860A WPS PIN Generator
-#File:dg860a_mac2wps.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 23.7.2015
-#Last modified: 23.7.2015
-#Shodan Dork:
-#Description: Generates WPS pin for Arris DG860A router based on mac
-#Based on work of Justin Oberdorf
-#https://packetstormsecurity.com/files/123631/ARRIS-DG860A-WPS-PIN-Generator.html
+# Name:ARRIS DG860A WPS PIN Generator
+# File:dg860a_mac2wps.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 23.7.2015
+# Last modified: 23.7.2015
+# Shodan Dork:
+# Description: Generates WPS pin for Arris DG860A router based on mac
+# Based on work of Justin Oberdorf
+# https://packetstormsecurity.com/files/123631/ARRIS-DG860A-WPS-PIN-Generator.html
 
 import core.Misc
 import core.io

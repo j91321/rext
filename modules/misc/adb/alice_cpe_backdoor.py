@@ -1,11 +1,11 @@
-#Name:Alice Telecom Italia CPE Modem/Routers Pirelli (now ADB) backdoor hash payload generator
-#File:alice_cpe_backdoor.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 17.2.2014
-#Last modified: 17.2.2014
-#Shodan Dork:
-#Description: Generates payload with hash, needed to activate telnet, ftp, tftp and webadmin interface
+# Name:Alice Telecom Italia CPE Modem/Routers Pirelli (now ADB) backdoor hash payload generator
+# File:alice_cpe_backdoor.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 17.2.2014
+# Last modified: 17.2.2014
+# Shodan Dork:
+# Description: Generates payload with hash, needed to activate telnet, ftp, tftp and webadmin interface
 #             You still have to send IP packet with the payload to the router
 #             The ip packet send to router must have the following feature:
 #             1)IP-protocol-number 255 (there's a RAW SOCKET listening on the router)
@@ -15,7 +15,7 @@
 #             You can send it with nemesis (nemesis ip -D 192.168.1.1 -p 255 -P payload.hex)
 #             Based on work of saxdax and drPepperOne
 #             http://saxdax.blogspot.com/2009/01/backdoor-on-telecom-italia-pirelli.html
-#Note: This would make a nice exploit (with ability to send the packet) but I don't have a device for testing.
+# Note: This would make a nice exploit (with ability to send the packet) but I don't have a device for testing.
 
 import core.Misc
 import core.io

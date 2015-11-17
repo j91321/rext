@@ -1,9 +1,9 @@
-#This file is part of REXT
-#core.loader.py - script that handles dynamic loading an unloading scripts
-#Author: Ján Trenčanský
-#delete_module was written by Michael P. Reilly
-#it was taken from https://mail.python.org/pipermail/tutor/2006-August/048596.html
-#License: GNU GPL v3
+# This file is part of REXT
+# core.loader.py - script that handles dynamic loading an unloading scripts
+# Author: Ján Trenčanský
+# delete_module was written by Michael P. Reilly
+# it was taken from https://mail.python.org/pipermail/tutor/2006-August/048596.html
+# License: GNU GPL v3
 
 import importlib
 import importlib.util

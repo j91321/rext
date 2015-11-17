@@ -1,13 +1,13 @@
 # Name:Arris password of the day generator
 # File:tm602a_password_day_py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 29.3.2015
-#Last modified: 29.3.2015
-#Shodan Dork:
-#Description: The Accton company builds switches, which are rebranded and sold by several manufacturers.
-#             Based on work of Raul Pedro Fernandes Santos and  routerpwn.com
-#             Project homepage: http://www.borfast.com/projects/arrispwgen
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 29.3.2015
+# Last modified: 29.3.2015
+# Shodan Dork:
+# Description: The Accton company builds switches, which are rebranded and sold by several manufacturers.
+# Based on work of Raul Pedro Fernandes Santos and  routerpwn.com
+# Project homepage: http://www.borfast.com/projects/arrispwgen
 
 
 import core.Misc

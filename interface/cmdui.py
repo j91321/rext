@@ -1,7 +1,7 @@
-#This file is part of REXT
-#cmdui.py - command line interface script
-#Author: Ján Trenčanský
-#License: GNU GPL v3
+# This file is part of REXT
+# cmdui.py - command line interface script
+# Author: Ján Trenčanský
+# License: GNU GPL v3
 
 import cmd
 
@@ -9,7 +9,7 @@ import interface.utils
 import core.globals
 from core import loader
 from core import updater
-from interface.messages import print_error, print_help, print_blue
+from interface.messages import print_error, print_help, print_blue, print_purple
 
 
 class Interpreter(cmd.Cmd):
@@ -25,14 +25,14 @@ class Interpreter(cmd.Cmd):
             print_error("OUI database could not be open, please provide OUI database")
         cmd.Cmd.__init__(self)
         self.prompt = ">"
-        #Load banner
+        # Load banner
         with open("./interface/banner.txt", "r") as file:
             banner = ""
             for line in file.read():
                 banner += line
             self.intro = banner
             file.close()
-        #Load list of available modules in modules
+        # Load list of available modules in modules
         module_directory_names = interface.utils.list_dirs("./modules")  # List directories in module directory
         for module_name in module_directory_names:
             path = "./modules/" + module_name
@@ -54,7 +54,7 @@ class Interpreter(cmd.Cmd):
         loader.close_database(core.globals.ouidb_conn)
         return True
 
-    #Interpreter commands section
+    # Interpreter commands section
 
     def do_show(self, module):
         if module == "":
@@ -77,26 +77,32 @@ class Interpreter(cmd.Cmd):
             print_error("Invalid argument for command show " + module)
 
     def do_load(self, module):
-        if isinstance(self.active_module, set):
-            core.globals.active_script = module
-            module_path = core.globals.active_module_path + module
-            self.active_module_import_name = interface.utils.make_import_name(module_path)
-            loader.load_module(self.active_module_import_name)  # Module is loaded and executed
-            try:
-                loader.delete_module(self.active_module_import_name)  # Module is unloaded so it can be used again
-            except ValueError:
-                pass
-            core.globals.active_module_import_name = ""
-        elif isinstance(self.active_module, dict):
-            if module in self.active_module.keys():
-                self.active_module = self.active_module.get(module)
-                core.globals.active_module_path += module + "/"
-                interface.utils.change_prompt(self, core.globals.active_module_path)
-            else:
-                print_error(module + " not found")
+        tokens = module.split("/")
+        while tokens:  # That'll do pig.
+            module = tokens.pop(0)
+            if module in self.modules:  # Basic idea if first word is exploits, scanners etc. go to REXT root
+                self.do_unload(None)
+            if isinstance(self.active_module, set):  # If you are in the last layer and only .py files load them
+                core.globals.active_script = module
+                module_path = core.globals.active_module_path + module
+                self.active_module_import_name = interface.utils.make_import_name(module_path)
+                loader.load_module(self.active_module_import_name)  # Module is loaded and executed
+                try:
+                    loader.delete_module(self.active_module_import_name)  # Module is unloaded so it can be used again
+                except ValueError:
+                    pass
+                core.globals.active_module_import_name = ""
+            elif isinstance(self.active_module, dict):  # Else change directory depth
+                if module in self.active_module.keys():
+                    self.active_module = self.active_module.get(module)
+                    core.globals.active_module_path += module + "/"
+                    interface.utils.change_prompt(self, core.globals.active_module_path)
+                else:
+                    print_error(module + " not found")  # If error occurred then print error and break parsing
+                    break
 
     def do_unload(self, e):
-        self.active_module = self.modules
+        self.active_module = self.modules  # Change every setting to REXT root
         interface.utils.change_prompt(self, None)
         core.globals.active_module_path = ""
 
@@ -104,8 +110,8 @@ class Interpreter(cmd.Cmd):
         args = e.split(' ')
         if args[0] == "oui":
             print_blue("Updating OUI DB. Database rebuild may take several minutes.")
-            #print_blue("Do you wish to continue? (y/n)")
-            #Add if here
+            # print_blue("Do you wish to continue? (y/n)")
+            # Add if here
             updater.update_oui()
             print_blue("OUI database updated successfully.")
         elif args[0] == "force":
@@ -116,16 +122,25 @@ class Interpreter(cmd.Cmd):
             updater.update_rext()
             print_blue("Update successful")
 
-    #Help to commands section
+    # Help to commands section
 
     def help_show(self):
-        print_help("List available modules and vendors")
+        print_help("list available modules and vendors")
 
     def help_load(self):
-        print_help("load command help")
+        print_help("load module")
+        print_purple("Usage: load <path>")
 
-    def help_update(self):
-        print_help("update command help")
+    def help_update(self):  # Recreate this with python formatter
+        print_help("update REXT functionality")
+        print_purple("Usage: update <argument>")
+        print_purple("Available arguments:\n"
+                     "\tno argument\n\t\tupdate REXT using git\n"
+                     "\toui\n\t\tupdate MAC vendor database\n"
+                     "\tforce\n\t\tdo git reset --hard and update\n")
+
+    def help_unload(self):
+        print_help("return to root of REXT modules")
 
     def help_exit(self):
         print_help("Exit REXT")

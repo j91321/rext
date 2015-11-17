@@ -1,13 +1,13 @@
-#Name:A1/Telekom Austria PRG EAV4202N Default WPA Key Algorithm Weakness
-#File:a1_default_wpa_key.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 17.2.2014
-#Last modified: 17.2.2014
-#Shodan Dork:
-#Description: Generates WPA key for ADB PRG EAV4202N used by A1/Telekom in Austria
-#             Based on work of Stefan Viehboeck
-#             https://sviehb.wordpress.com/2011/12/04/prg-eav4202n-default-wpa-key-algorithm/
+# Name:A1/Telekom Austria PRG EAV4202N Default WPA Key Algorithm Weakness
+# File:a1_default_wpa_key.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 17.2.2014
+# Last modified: 17.2.2014
+# Shodan Dork:
+# Description: Generates WPA key for ADB PRG EAV4202N used by A1/Telekom in Austria
+# Based on work of Stefan Viehboeck
+# https://sviehb.wordpress.com/2011/12/04/prg-eav4202n-default-wpa-key-algorithm/
 
 import core.Misc
 import core.io

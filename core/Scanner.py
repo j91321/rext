@@ -33,7 +33,7 @@ class RextScanner(cmd.Cmd):
             else:
                 print_error("please provide valid IPv4 address")
         elif args[0] == "port":
-            if isinstance(args[1], int):
+            if str.isdigit(args[1]):
                 self.port = args[1]
             else:
                 print_error("port value must be integer")

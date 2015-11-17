@@ -1,12 +1,12 @@
 # Name:Draytek Vigor 2XXX/3XXX series FW decompression and FS extraction
-#File:vigor_fw_decompress.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 25.2.2014
-#Last modified: 25.2.2014
-#Shodan Dork:
-#Description: Decompress FW file extract FS
-#             Based on draytools work of Nikita Abdullin (AMMOnium) https://github.com/ammonium/draytools
+# File:vigor_fw_decompress.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 25.2.2014
+# Last modified: 25.2.2014
+# Shodan Dork:
+# Description: Decompress FW file extract FS
+# Based on draytools work of Nikita Abdullin (AMMOnium) https://github.com/ammonium/draytools
 
 import core.Decryptor
 import core.io

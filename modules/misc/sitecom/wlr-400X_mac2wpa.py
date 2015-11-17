@@ -1,13 +1,13 @@
-#Name:Default WPA key generator for Sitecom WLR-4000/4004 routers
-#File:wlr-400X_mac2wpa.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 22.7.2015
-#Last modified: 22.7.2015
-#Shodan Dork:
-#Description: Generates default WPA key for Sitecom WLR-4000/4004 routers
-#Based on work of Roberto Paleari (@rpaleari) and Alessandro Di Pinto (@adipinto)
-#http://blog.emaze.net/2014/04/sitecom-firmware-and-wifi.html
+# Name:Default WPA key generator for Sitecom WLR-4000/4004 routers
+# File:wlr-400X_mac2wpa.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 22.7.2015
+# Last modified: 22.7.2015
+# Shodan Dork:
+# Description: Generates default WPA key for Sitecom WLR-4000/4004 routers
+# Based on work of Roberto Paleari (@rpaleari) and Alessandro Di Pinto (@adipinto)
+# http://blog.emaze.net/2014/04/sitecom-firmware-and-wifi.html
 
 import core.Misc
 import core.io

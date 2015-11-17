@@ -1,12 +1,13 @@
-#Name:SAGEM FAST telnet password generator
-#File:fast_telnet_password.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 21.7.2015
-#Last modified: 21.7.2015
-#Shodan Dork:
-#Description: Generates root telnet password for various SAGEM FAST routers (Sagem Fast 3304-V1 / 3304-V2 / 3464 / 3504)
-#Based on work of Elouafiq Ali https://www.exploit-db.com/exploits/17670/
+# Name:SAGEM FAST telnet password generator
+# File:fast_telnet_password.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 21.7.2015
+# Last modified: 21.7.2015
+# Shodan Dork:
+# Description: Generates root telnet password for various SAGEM FAST routers
+# (Sagem Fast 3304-V1 / 3304-V2 / 3464 / 3504)
+# Based on work of Elouafiq Ali https://www.exploit-db.com/exploits/17670/
 
 import core.Misc
 import core.io

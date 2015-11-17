@@ -1,13 +1,14 @@
 # Name:Draytek Vigor 2XXX/3XXX series config file decryption and decompression with password extraction
-#File:vigor_config.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 7.3.2014
-#Last modified: 7.3.2014
-#Shodan Dork:
-#Description: Guess the state of config file and decrypt and decompress it, extract passwords
-#             Based on draytools work of Nikita Abdullin (AMMOnium) https://github.com/ammonium/draytools
-#TODO: No sample of older cfg file, so not able to test properly. All cfgs use new encryption. Works with decrypted cfg
+# File:vigor_config.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 7.3.2014
+# Last modified: 7.3.2014
+# Shodan Dork:
+# Description: Guess the state of config file and decrypt and decompress it, extract passwords
+# Based on draytools work of Nikita Abdullin (AMMOnium) https://github.com/ammonium/draytools
+# TODO: No sample of older cfg file, so not able to test properly.
+# TODO: All cfgs use new encryption. Works with decrypted cfg
 import core.Decryptor
 import core.io
 import core.compression.lzo

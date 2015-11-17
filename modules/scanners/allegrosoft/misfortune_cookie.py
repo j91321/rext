@@ -1,11 +1,11 @@
-#Name:Misfortune Cookie vulnerability scanner
-#File:misfortune_cookie.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 4.2.2014
-#Last modified: 19.8.2015
-#Shodan Dork:
-#Description: PoC based on 31C3 presentation
+# Name:Misfortune Cookie vulnerability scanner
+# File:misfortune_cookie.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 4.2.2014
+# Last modified: 19.8.2015
+# Shodan Dork:
+# Description: PoC based on 31C3 presentation
 
 import core.Scanner
 from interface.messages import print_failed, print_success, print_red, print_green, print_warning, print_error

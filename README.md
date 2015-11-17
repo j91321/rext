@@ -23,9 +23,9 @@ TODO
 
 - Porting javascript exploits from routerpwn.com (not always in the most pythonic way) - feel free to contribute
 
-- Module loading with whole path handling by cmd
-
 - Wiki
+
+- Tests
 
 Requirements
 ============
