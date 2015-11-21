@@ -15,6 +15,7 @@ from interface.messages import print_error, print_help, print_blue, print_purple
 class Interpreter(cmd.Cmd):
     #
     modules = {}
+    commands = {'modules':[],'show':[]}
     active_module = modules
     active_module_import_name = ""
 
@@ -43,6 +44,14 @@ class Interpreter(cmd.Cmd):
                 files = interface.utils.list_files(vendor_path)
                 vendors_dict[vendor] = files
             self.modules[module_name] = vendors_dict
+            for expl in list(vendors_dict.items()):
+                if len(list(expl[1])) > 0:
+                    for items in list(expl[1]):
+                        pathmodule = '{}/{}/{}'.format(module_name,expl[0],items)
+                        if pathmodule not in self.commands['modules']:
+                            self.commands['modules'].append(pathmodule)
+            for commands in self.commands['modules']:
+                self.commands['show'].append(commands.split('/')[0])
 
     def emptyline(self):
         pass
@@ -121,6 +130,19 @@ class Interpreter(cmd.Cmd):
             print_blue("Updating REXT please wait...")
             updater.update_rext()
             print_blue("Update successful")
+
+    # autocomplete section
+    def complete_load(self, text, line, begidx, endidx):
+        modules = self.commands['modules']
+        module_line = line.partition(' ')[2]
+        igon = len(module_line) - len(text)
+        return [s[igon:] for s in modules if s.startswith(module_line)]
+
+    def complete_show(self, text, line, begidx, endidx):
+        modules = self.commands['show']
+        module_line = line.partition(' ')[2]
+        igon = len(module_line) - len(text)
+        return [s[igon:] for s in modules if s.startswith(module_line)]
 
     # Help to commands section
 
