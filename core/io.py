@@ -18,3 +18,14 @@ def writefile(stream, filename):
             return dirpath
     except OSError:
         print_error("Unable to create directory")
+
+
+def writetextfile(text, filename):
+    dirpath = "output/" + core.globals.active_script + "_" + datetime.datetime.today().isoformat()
+    try:
+        if not os.path.exists(dirpath):
+            os.mkdir(dirpath)
+            open(dirpath + "/" + filename, 'w').write(text)
+            return dirpath
+    except OSError:
+        print_error("Unable to create directory")
