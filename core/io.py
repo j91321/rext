@@ -9,24 +9,25 @@ import core.globals
 from interface.messages import print_error, print_yellow, print_red
 
 
+# FIXME: If minute changes between two writes of one module, this will create two directories
 def writefile(stream, filename):
-    dirpath = "output/" + core.globals.active_script + "_" + datetime.datetime.today().isoformat()
+    dirpath = "output/" + core.globals.active_script + "_" + datetime.datetime.today().strftime('%Y-%b-%d-%H:%M')
     try:
         if not os.path.exists(dirpath):
             os.mkdir(dirpath)
-            open(dirpath + "/" + filename, 'wb').write(stream)
-            return dirpath
+        open(dirpath + "/" + filename, 'wb').write(stream)
+        return dirpath
     except OSError:
         print_error("Unable to create directory")
 
 
 def writetextfile(text, filename):
-    dirpath = "output/" + core.globals.active_script + "_" + datetime.datetime.today().isoformat()
+    dirpath = "output/" + core.globals.active_script + "_" + datetime.datetime.today().strftime('%Y-%b-%d-%H:%M')
     try:
         if not os.path.exists(dirpath):
             os.mkdir(dirpath)
-            open(dirpath + "/" + filename, 'w').write(text)
-            return dirpath
+        open(dirpath + "/" + filename, 'w').write(text)
+        return dirpath
     except OSError:
         print_error("Unable to create directory")
 

@@ -9,7 +9,7 @@ if identify_os() == 'posix':
 
     class Color:
         BLUE = '\033[94m'
-        GREEN = '\033[92m'
+        GREEN = '\033[32m'
         YELLOW = '\033[93m'
         RED = '\033[91m'
         PURPLE = '\033[95m'
