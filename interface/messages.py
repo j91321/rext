@@ -1,8 +1,8 @@
-#This file is part of REXT
-#core.messages.py - script containing colors and messages
-#Author: Ján Trenčanský
-#License: GNU GPL v3
-#Based on http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python
+# This file is part of REXT
+# core.messages.py - script containing colors and messages
+# Author: Ján Trenčanský
+# License: GNU GPL v3
+# Based on http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python
 from interface.utils import identify_os
 
 if identify_os() == 'posix':

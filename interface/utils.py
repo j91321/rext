@@ -15,11 +15,13 @@ import core.globals
 def validate_mac(mac):
     xr = re.compile(r'^([a-fA-F0-9]{2}([:-]?)[a-fA-F0-9]{2}(\2[a-fA-F0-9]{2}){4})$')
     rr = xr.match(mac)
-    return rr
+    if rr:
+        return True
+    else:
+        return False
 
 
 def lookup_mac(mac):
-    # TODO: Maybe add index over oui table
     mac = mac.replace(":", "")
     mac = mac.replace("-", "")
     cursor = core.globals.ouidb_conn.cursor()
@@ -56,7 +58,7 @@ def list_dirs(path):
     dirs = {name for name in os.listdir(path) if os.path.isdir(os.path.join(path, name))}
     if "__pycache__" in dirs:
         dirs.remove("__pycache__")
-    elif ".cache" in dirs:
+    if ".cache" in dirs:
         dirs.remove(".cache")
     return dirs
 
@@ -101,7 +103,7 @@ def wget(url, path):
     def hook(blocks, block_size, total_size):
         current = blocks * block_size
         percent = 100.0 * current / total_size
-        # Found this somewhere
+        # Found this somewhere, don't remember where sorry
         line = '[{0}{1}]'.format('=' * int(percent / 2), ' ' * (50 - int(percent / 2)))
         status = '\r{0:3.0f}%{1} {2:3.1f}/{3:3.1f} MB'
         sys.stdout.write(status.format(percent, line, current/1024/1024, total_size/1024/1024))

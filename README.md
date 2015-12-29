@@ -22,10 +22,8 @@ TODO
 
 
 - Porting javascript exploits from routerpwn.com (not always in the most pythonic way) - feel free to contribute
-
-- Wiki
-
-- Tests
+- More and better tests
+- More modules
 
 Requirements
 ============

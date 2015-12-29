@@ -72,4 +72,3 @@ def open_database(path):
 
 def close_database(connection):
     connection.close()
-

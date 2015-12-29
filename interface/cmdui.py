@@ -4,6 +4,7 @@
 # License: GNU GPL v3
 
 import cmd
+import sys
 
 import interface.utils
 import core.globals
@@ -15,16 +16,16 @@ from interface.messages import print_error, print_help, print_blue, print_purple
 class Interpreter(cmd.Cmd):
     #
     modules = {}
-    commands = {'modules':[],'show':[]}
+    commands = {'modules': [], 'show': []}
     active_module = modules
     active_module_import_name = ""
 
-    def __init__(self):
+    def __init__(self, stdout=sys.stdout):
         loader.check_dependencies()
         core.globals.ouidb_conn = loader.open_database("./databases/oui.db")
         if core.globals.ouidb_conn is None:
             print_error("OUI database could not be open, please provide OUI database")
-        cmd.Cmd.__init__(self)
+        cmd.Cmd.__init__(self, stdout=stdout)  # stdout had to be added for tests
         self.prompt = ">"
         # Load banner
         with open("./interface/banner.txt", "r") as file:
@@ -47,7 +48,7 @@ class Interpreter(cmd.Cmd):
             for expl in list(vendors_dict.items()):
                 if len(list(expl[1])) > 0:
                     for items in list(expl[1]):
-                        pathmodule = '{}/{}/{}'.format(module_name,expl[0],items)
+                        pathmodule = '{}/{}/{}'.format(module_name, expl[0], items)
                         if pathmodule not in self.commands['modules']:
                             self.commands['modules'].append(pathmodule)
             for commands in self.commands['modules']:
@@ -64,23 +65,23 @@ class Interpreter(cmd.Cmd):
         return True
 
     # Interpreter commands section
-
+    # This was not written with performance in mind exactly...
     def do_show(self, module):
         if module == "":
             if isinstance(self.active_module, dict):
-                for key in self.active_module.keys():
+                for key in sorted(self.active_module.keys()):
                     print(key)
             elif isinstance(self.active_module, set):
-                for file in self.active_module:
+                for file in sorted(self.active_module):
                     print(file)
         elif module == "modules":
-            for key in self.modules.keys():
+            for key in sorted(self.modules.keys()):
                 print(key)
         elif module in self.modules.keys():
-            for key in self.modules.get(module).keys():
+            for key in sorted(self.modules.get(module).keys()):
                 print(key)
         elif (self.active_module is dict) and (module in self.active_module.keys()):
-            for key in self.active_module.get(module):
+            for key in sorted(self.active_module.get(module)):  # Yeah lot of sorting going on I know
                 print(key)
         else:
             print_error("Invalid argument for command show " + module)
