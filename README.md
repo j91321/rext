@@ -3,6 +3,7 @@ Router Exploitation Toolkit - REXT
 
 Small toolkit for easy creation and usage of various python scripts that work with embedded devices.
 
+[![Build Status](https://travis-ci.org/j91321/rext.svg?branch=master)](https://travis-ci.org/j91321/rext)
 
 - core - contains most of toolkits basic functions
 - databases - contains databases, like default credentials etc.

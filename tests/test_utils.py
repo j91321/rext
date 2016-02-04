@@ -74,10 +74,11 @@ class UtilsTest(unittest.TestCase):
     @unittest.mock.patch("interface.utils.os")
     def test_identify_os(self, mock_os):
         """identify_os() should call os.name and return it's value"""
-        # I think checking if os.name was called is sufficient
+        # Another useless test
         # anyway these are just simple tests so I can get hang of writing them
+        mock_os.name = "posix"
         interface.utils.identify_os()
-        mock_os.name.assert_called()
+        self.assertEqual("posix", mock_os.name)
 
     @unittest.mock.patch("interface.utils.os")
     def test_list_dirs(self, mock_os):

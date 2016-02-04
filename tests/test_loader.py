@@ -14,7 +14,7 @@ class CmdUiTest(unittest.TestCase):
     def test_db_open(self, mock_sqlite):
         path = "./databases/oui.db"
         core.loader.open_database(path)
-        self.assertTrue(mock_sqlite.connect.assert_called(path))
+        self.assertTrue(mock_sqlite.connect.assert_called_once_with(path))
 
     def test_db_close(self):  # Some of these tests are so dumb, don't know why I even bother with them
         connect = unittest.mock.MagicMock()
