@@ -9,7 +9,7 @@
 # You may want to run binwalk on config.bin first, so far I've seen 3 types of config.bin
 # 1. Header+plain XML 2. Header+zlib XML 3. Header+unknown encryption/obfuscation
 # Based on :
-# http://reverseengineering.stackexchange.com/questions/3593/re-compressed-backup-file-router-linux-based-so-is-it-compresed-with-zlib?lq=1
+# http://reverseengineering.stackexchange.com/questions/3593/re-compressed-backup-file-router-linux-based-so-is-it-compresed-with-zlib
 # TODO reverse process
 import core.Decryptor
 import core.io
@@ -22,6 +22,23 @@ import re
 
 
 class Decryptor(core.Decryptor.RextDecryptor):
+    """
+Name:ZTE config.bin XML extractor
+File:config_zlib_decompress.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 26.12.2015
+Description: Extract XML from config.bin for various ZTE devices.
+    You may want to run binwalk on config.bin first, so far I've seen 3 types of config.bin
+    1. Header+plain XML 2. Header+zlib XML 3. Header+unknown encryption/obfuscation
+Based on :
+http://reverseengineering.stackexchange.com/questions/3593/re-compressed-backup-file-router-linux-based-so-is-it-compresed-with-zlib
+http://reverseengineering.stackexchange.com/questions/11626/zte-encrypted-backup-config-file
+Options:
+    Name        Description
+
+    file        Input config file path
+    """
 
     def __init__(self):
         core.Decryptor.RextDecryptor.__init__(self)

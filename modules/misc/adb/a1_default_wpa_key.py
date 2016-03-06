@@ -19,6 +19,20 @@ import hashlib
 
 
 class Misc(core.Misc.RextMisc):
+    """
+Name:A1/Telekom Austria PRG EAV4202N Default WPA Key Algorithm Weakness
+File:a1_default_wpa_key.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 17.2.2014
+Description: Generates WPA key for ADB PRG EAV4202N used by A1/Telekom in Austria
+Based on: Work of Stefan Viehboeck https://sviehb.wordpress.com/2011/12/04/prg-eav4202n-default-wpa-key-algorithm/
+
+Options:
+    Name        Description
+
+    mac         MAC address used as input for password generation
+    """
     mac = "00:00:00:00:00"
 
     def __init__(self):

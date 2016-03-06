@@ -18,6 +18,20 @@ from binascii import unhexlify
 
 
 class Misc(core.Misc.RextMisc):
+    """
+Name:Draytek Vigor V2XXX and V3XXX master key generator
+File:vigor_master_key.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 17.2.2014
+Description: Generates master key for older FW versions of Vigor routers based on MAC address.
+Based on: draytools work of Nikita Abdullin (AMMOnium) https://github.com/ammonium/draytools
+
+Options:
+    Name        Description
+
+    mac         MAC address used as input for master password generation
+    """
     mac = "00:00:00:00:00"
 
     def __init__(self):

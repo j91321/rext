@@ -15,6 +15,20 @@ from interface.utils import validate_mac, lookup_mac
 
 
 class Misc(core.Misc.RextMisc):
+    """
+Name:Huawei HG520 mac2wepkey
+File:hg520_mac2wep.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 14.6.2015
+Description: Generates WEP Key for Huawei HG5XX based on mac.
+Based on: Work by humberto121@websec.mx - 12/2010
+
+Options:
+    Name        Description
+
+    mac         MAC address used as input for WEP password generation
+    """
     mac = "00:00:00:00:00"
 
     def __init__(self):

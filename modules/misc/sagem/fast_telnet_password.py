@@ -16,6 +16,21 @@ from interface.utils import validate_mac, lookup_mac
 
 
 class Misc(core.Misc.RextMisc):
+    """
+Name:SAGEM FAST telnet password generator
+File:fast_telnet_password.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 21.7.2015
+Description: Generates root telnet password for various SAGEM FAST routers
+    (Sagem Fast 3304-V1 / 3304-V2 / 3464 / 3504)
+Based on: Work of Elouafiq Ali https://www.exploit-db.com/exploits/17670/
+
+Options:
+    Name        Description
+
+    mac         MAC address used as input for telnet password generation
+    """
     mac = "00:00:00:00:00"
 
     def __init__(self):

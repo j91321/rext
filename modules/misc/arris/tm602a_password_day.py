@@ -19,6 +19,21 @@ import math
 
 
 class Misc(core.Misc.RextMisc):
+    """
+Name:Arris password of the day generator
+File:tm602a_password_day_py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 29.3.2015
+Description: The Accton company builds switches, which are rebranded and sold by several manufacturers.
+Based on work of Raul Pedro Fernandes Santos and  routerpwn.com http://www.borfast.com/projects/arrispwgen
+
+Options:
+    Name        Description
+
+    start       Set start date in format YYYY-MM-DD
+    end         Set end date in format YYYY-MM-DD
+    """
     start_date = datetime.date.today().isoformat()
     end_date = datetime.date.today()
     end_date += datetime.timedelta(days=1)

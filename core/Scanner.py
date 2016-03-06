@@ -19,6 +19,9 @@ class RextScanner(cmd.Cmd):
         interface.utils.change_prompt(self, core.globals.active_module_path + core.globals.active_script)
         self.cmdloop()
 
+    def do_info(self, e):
+        print(self.__doc__)
+
     def do_exit(self, e):
         return True
 
@@ -58,3 +61,6 @@ class RextScanner(cmd.Cmd):
 
     def help_set(self):
         print_help("Set value of variable: \"set host 192.168.1.1\"")
+
+    def help_info(self, e):
+        print_help("Show info about loaded module")

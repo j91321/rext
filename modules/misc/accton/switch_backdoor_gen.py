@@ -16,6 +16,21 @@ from interface.messages import print_success, print_error, print_help, print_gre
 
 
 class Misc(core.Misc.RextMisc):
+    """
+Name:Accton-based switches (3com, Dell, SMC, Foundry and EdgeCore) - Backdoor Password
+File:switch_backdoor_gen.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 29.3.2015
+Description: The Accton company builds switches, which are rebranded and sold by several manufacturers.
+    The backdoor password can be calculated if you have the switch MAC-address.
+Based on http://www.exploit-db.com/exploits/14875/ and routerpwn.com
+
+Options:
+    Name        Description
+
+    mac         MAC address used as input for password generation
+    """
     mac = "00:00:00:00:00"
     password = ""
 

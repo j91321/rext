@@ -17,6 +17,9 @@ class RextMisc(cmd.Cmd):
         interface.utils.change_prompt(self, core.globals.active_module_path + core.globals.active_script)
         self.cmdloop()
 
+    def do_info(self, e):
+        print(self.__doc__)
+
     def do_exit(self, e):
         return True
 
@@ -28,3 +31,6 @@ class RextMisc(cmd.Cmd):
 
     def help_run(self):
         print_help("Run script")
+
+    def help_info(self, e):
+        print_help("Show info about loaded module")

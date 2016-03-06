@@ -21,6 +21,9 @@ class RextDecryptor(cmd.Cmd):
     def do_exit(self, e):
         return True
 
+    def do_info(self, e):
+        print(self.__doc__)
+
     def do_run(self, e):
         pass
 
@@ -49,3 +52,6 @@ class RextDecryptor(cmd.Cmd):
 
     def help_set(self):
         print_help("Set value of variable: \"set file /tmp/FW.bin\"")
+
+    def help_info(self, e):
+        print_help("Show info about loaded module")

@@ -20,6 +20,21 @@ import math
 
 
 class Decryptor(core.Decryptor.RextDecryptor):
+    """
+Name:Draytek Vigor 2XXX/3XXX series config file decryption and decompression with password extraction
+File:vigor_config.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 7.3.2014
+Description: Guess the state of config file and decrypt and decompress it, extract passwords
+Based on: draytools work of Nikita Abdullin (AMMOnium) https://github.com/ammonium/draytools
+
+Options:
+    Name        Description
+
+    file        Input config file path
+    """
+
     CFG_RAW = 0
     CFG_LZO = 1
     CFG_ENC = 2

@@ -22,6 +22,9 @@ class RextHarvester(cmd.Cmd):
     def do_exit(self, e):
         return True
 
+    def do_info(self, e):
+        print(self.__doc__)
+
     def do_run(self, e):
         pass
 
@@ -46,3 +49,6 @@ class RextHarvester(cmd.Cmd):
 
     def help_run(self, e):
         print_help("Run script")
+
+    def help_info(self, e):
+        print_help("Show info about loaded module")

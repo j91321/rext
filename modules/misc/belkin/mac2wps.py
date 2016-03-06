@@ -15,6 +15,20 @@ from interface.utils import validate_mac, lookup_mac
 
 
 class Misc(core.Misc.RextMisc):
+    """
+Name:Belkin F5D8235-4 v1000, F5D8231-4 v5000, F9K1104 v1000 mac2wps
+File:mac2wps.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 19.7.2015
+Description: Generates WPS key for Belkin F5D8235-4 v1000, F5D8231-4 v5000, F9K1104 v1000 based on mac.
+Based on: Work of ZhaoChunsheng and e.novellalorente@student.ru.nl (http://ednolo.alumnos.upv.es/?p=1295)
+
+Options:
+    Name        Description
+
+    mac         MAC address used as input for WPS pin generation
+    """
     mac = "00:00:00:00:00"
 
     def __init__(self):

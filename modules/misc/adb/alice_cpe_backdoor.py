@@ -28,6 +28,28 @@ from binascii import hexlify
 
 
 class Misc(core.Misc.RextMisc):
+    """
+Name:Alice Telecom Italia CPE Modem/Routers Pirelli (now ADB) backdoor hash payload generator
+File:alice_cpe_backdoor.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 17.2.2014
+Description: Generates payload with hash, needed to activate telnet, ftp, tftp and webadmin interface
+    You still have to send IP packet with the payload to the router
+    The ip packet send to router must have the following feature:
+    1)IP-protocol-number 255 (there's a RAW SOCKET listening on the router)
+    2)Payload size 8 byte
+    3)The payload are the first 8 byte of a salted md5 of the mac address of device br0
+    4)br0 in these modems has the same mac of eth0
+    You can send it with nemesis (nemesis ip -D 192.168.1.1 -p 255 -P payload.hex)
+Based on: Work of saxdax and drPepperOne http://saxdax.blogspot.com/2009/01/backdoor-on-telecom-italia-pirelli.html
+Note: This would make a nice exploit (with ability to send the packet) but I don't have a device for testing.
+
+Options:
+    Name        Description
+
+    mac         MAC address used as input for password generation
+    """
     mac = "00:00:00:00:00"
 
     def __init__(self):

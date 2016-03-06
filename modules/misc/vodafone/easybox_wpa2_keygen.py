@@ -14,6 +14,19 @@ from interface.utils import validate_mac, lookup_mac
 
 
 class Misc(core.Misc.RextMisc):
+    """
+Name:Vodafone Easybox Standard WPA2 Key Generator
+File:easybox_wpa2_keygen.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 13.6.2015
+Description: Generates WPA2 Key for Vodafone easybox. Based on routerpwn.com easyboxwpa()
+
+Options:
+    Name        Description
+
+    mac         MAC address used as input for WPA2 password generation
+    """
     mac = "00:00:00:00:00"
 
     def __init__(self):

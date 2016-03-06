@@ -15,6 +15,20 @@ from interface.utils import validate_mac, lookup_mac
 
 
 class Misc(core.Misc.RextMisc):
+    """
+Name:Huawei HG8245/HG8247 mac2wpakey
+File:hg8245_mac2wpa.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 18.7.2015
+Description: Generates WPA key for Huawei HG8245/HG8247 based on mac.
+Based on: function HG824x() routerpwn.com
+
+Options:
+    Name        Description
+
+    mac         MAC address used as input for WPA password generation
+    """
     mac = "00:00:00:00:00"
 
     def __init__(self):

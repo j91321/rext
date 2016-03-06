@@ -16,6 +16,22 @@ from interface.messages import print_error, print_yellow, print_green, print_hel
 
 
 class Exploit(core.Exploit.RextExploit):
+    """
+Name:Send GET HTTP and print response.
+File:http_ping.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 27.12.2015
+Description: For those times when you just want dork for shodan but don't want to run Burp
+
+Options:
+    Name        Description
+
+    host        Target host address
+    port        Target port
+    ssl         Yes/No value if request should be sent using SSL
+    body        Yes/No value if you want to print response body or not
+    """
     ssl = False
     body = True
 

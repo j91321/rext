@@ -1,16 +1,16 @@
-#Name:Airlive WT-2000ARM information harvester module
-#File:WT2000ARM.py
-#Author:Ján Trenčanský
-#License: GNU GPL v3
-#Created: 29.8.2013
-#Last modified: 19.8.2015
-#Shodan Dork: WWW-Authenticate: Basic realm="AirLive WT-2000ARM
-#Description:This module is old, very very old, major refactoring is needed
-#Actually it's complete shit I'll have to rewrite it completly
-#TODO:Don't use it's broken
+# Name:Airlive WT-2000ARM information harvester module
+# File:WT2000ARM.py
+# Author:Ján Trenčanský
+# License: GNU GPL v3
+# Created: 29.8.2013
+# Last modified: 19.8.2015
+# Shodan Dork: WWW-Authenticate: Basic realm="AirLive WT-2000ARM
+# Description:This module is old, very very old, major refactoring is needed
+# Actually it's complete shit I'll have to rewrite it completly
+# TODO:Don't use it's broken
 
-#UI
-#WEP/WPA
+# UI
+# WEP/WPA
 
 import requests
 import requests.exceptions
@@ -20,6 +20,21 @@ from interface.messages import print_failed, print_success, print_red, print_gre
 
 
 class Harvester(core.Harvester.RextHarvester):
+    """
+Name:Airlive WT-2000ARM information harvester module
+File:WT2000ARM.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 29.8.2013
+Description:This module is old, very very old, major refactoring is needed
+    Actually it's complete shit I'll have to rewrite it completly
+
+Options:
+    Name        Description
+
+    host        Target host address
+    port        Target port
+    """
     #Default credentials and default IP of target ( ,() is there because of for cycle that goes through credentials)
     def __init__(self):  # need to fix passing credentials () breaks for cycle)
         self.credentials_list = (("admin", "airlive"), ())

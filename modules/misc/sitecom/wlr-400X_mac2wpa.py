@@ -18,6 +18,21 @@ import binascii
 
 
 class Misc(core.Misc.RextMisc):
+    """
+Name:Default WPA key generator for Sitecom WLR-4000/4004 routers
+File:wlr-400X_mac2wpa.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 22.7.2015
+Description: Generates default WPA key for Sitecom WLR-4000/4004 routers
+Based on: Work of Roberto Paleari (@rpaleari) and Alessandro Di Pinto (@adipinto)
+    http://blog.emaze.net/2014/04/sitecom-firmware-and-wifi.html
+
+Options:
+    Name        Description
+
+    mac         MAC address used as input for WPA password generation
+    """
     mac = "00:00:00:00:00"
 
     def __init__(self):

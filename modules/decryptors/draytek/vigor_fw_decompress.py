@@ -18,6 +18,20 @@ import os
 
 
 class Decryptor(core.Decryptor.RextDecryptor):
+    """
+Name:Draytek Vigor 2XXX/3XXX series FW decompression and FS extraction
+File:vigor_fw_decompress.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 25.2.2014
+Description: Decompress firmware file extract filesystem
+
+Options:
+    Name        Description
+
+    file        Input firmware file path
+    """
+
     def __init__(self):
         core.Decryptor.RextDecryptor.__init__(self)
 

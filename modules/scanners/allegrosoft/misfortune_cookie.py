@@ -16,6 +16,20 @@ import re
 
 
 class Scanner(core.Scanner.RextScanner):
+    """
+Name:Misfortune Cookie vulnerability scanner
+File:misfortune_cookie.py
+Author:Ján Trenčanský
+License: GNU GPL v3
+Created: 4.2.2014
+Description: PoC based on 31C3 presentation, tries to exploit Misfortune cookie vulnerability with string omg1337hax
+
+Options:
+    Name        Description
+
+    host        Target host address
+    port        Target port
+    """
     def __init__(self):
         core.Scanner.RextScanner.__init__(self)
 
