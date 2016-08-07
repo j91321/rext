@@ -12,8 +12,10 @@ import socket
 import struct
 import select
 import requests
+import xml.dom.minidom
 import time
 import traceback
+import sys
 
 import core.globals
 import interface.utils
@@ -267,6 +269,328 @@ class Upnp(cmd.Cmd):
         except Exception:
             print("Request for '%s' failed" % url)
             return False, False
+
+        #Pull the name of the device type from a device type string
+    #The device type string looks like: 'urn:schemas-upnp-org:device:WANDevice:1'
+    def parseDeviceTypeName(self,string):
+        delim1 = 'device:'
+        delim2 = ':'
+
+        if delim1 in string and not string.endswith(delim1):
+            return string.split(delim1)[1].split(delim2,1)[0]
+        return False
+
+    #Pull the name of the service type from a service type string
+    #The service type string looks like: 'urn:schemas-upnp-org:service:Layer3Forwarding:1'
+    def parseServiceTypeName(self,string):
+        delim1 = 'service:'
+        delim2 = ':'
+
+        if delim1 in string and not string.endswith(delim1):
+            return string.split(delim1)[1].split(delim2,1)[0]
+        return False
+
+    #Get info about a service's state variables
+    def parseServiceStateVars(self,xmlRoot,servicePointer):
+
+        na = 'N/A'
+        varVals = ['sendEvents','dataType','defaultValue','allowedValues']
+        serviceStateTable = 'serviceStateTable'
+        stateVariable = 'stateVariable'
+        nameTag = 'name'
+        dataType = 'dataType'
+        sendEvents = 'sendEvents'
+        allowedValueList = 'allowedValueList'
+        allowedValue = 'allowedValue'
+        allowedValueRange = 'allowedValueRange'
+        minimum = 'minimum'
+        maximum = 'maximum'
+
+        #Create the serviceStateVariables entry for this service in ENUM_HOSTS
+        servicePointer['serviceStateVariables'] = {}
+
+        #Get a list of all state variables associated with this service
+        try:
+            stateVars = xmlRoot.getElementsByTagName(serviceStateTable)[0].getElementsByTagName(stateVariable)
+        except:
+            #Don't necessarily want to throw an error here, as there may be no service state variables
+            return False
+
+        #Loop through all state variables
+        for var in stateVars:
+            for tag in varVals:
+                #Get variable name
+                try:
+                    varName = str(var.getElementsByTagName(nameTag)[0].childNodes[0].data)
+                except:
+                    print('Failed to get service state variable name for service %s!' % servicePointer['fullName'])
+                    continue
+
+                servicePointer['serviceStateVariables'][varName] = {}
+                try:
+                    servicePointer['serviceStateVariables'][varName]['dataType'] = str(var.getElementsByTagName(dataType)[0].childNodes[0].data)
+                except:
+                    servicePointer['serviceStateVariables'][varName]['dataType'] = na
+                try:
+                    servicePointer['serviceStateVariables'][varName]['sendEvents'] = str(var.getElementsByTagName(sendEvents)[0].childNodes[0].data)
+                except:
+                    servicePointer['serviceStateVariables'][varName]['sendEvents'] = na
+
+                servicePointer['serviceStateVariables'][varName][allowedValueList] = []
+
+                #Get a list of allowed values for this variable
+                try:
+                    vals = var.getElementsByTagName(allowedValueList)[0].getElementsByTagName(allowedValue)
+                except:
+                    pass
+                else:
+                    #Add the list of allowed values to the ENUM_HOSTS dictionary
+                    for val in vals:
+                        servicePointer['serviceStateVariables'][varName][allowedValueList].append(str(val.childNodes[0].data))
+
+                #Get allowed value range for this variable
+                try:
+                    valList = var.getElementsByTagName(allowedValueRange)[0]
+                except:
+                    pass
+                else:
+                    #Add the max and min values to the ENUM_HOSTS dictionary
+                    servicePointer['serviceStateVariables'][varName][allowedValueRange] = []
+                    try:
+                        servicePointer['serviceStateVariables'][varName][allowedValueRange].append(str(valList.getElementsByTagName(minimum)[0].childNodes[0].data))
+                        servicePointer['serviceStateVariables'][varName][allowedValueRange].append(str(valList.getElementsByTagName(maximum)[0].childNodes[0].data))
+                    except:
+                        pass
+        return True
+
+    #Parse details about each service (arguements, variables, etc)
+    def parseServiceInfo(self,service,index):
+        argIndex = 0
+        argTags = ['direction','relatedStateVariable']
+        actionList = 'actionList'
+        actionTag = 'action'
+        nameTag = 'name'
+        argumentList = 'argumentList'
+        argumentTag = 'argument'
+
+        #Get the full path to the service's XML file
+        xmlFile = self.enum_hosts[index]['proto'] + self.enum_hosts[index]['name']
+        if not xmlFile.endswith('/') and not service['SCPDURL'].startswith('/'):
+            try:
+                xmlServiceFile = self.enum_hosts[index]['xml_file']
+                slashIndex = xmlServiceFile.rfind('/')
+                xmlFile = xmlServiceFile[:slashIndex] + '/'
+            except:
+                xmlFile += '/'
+
+        if self.enum_hosts[index]['proto'] in service['SCPDURL']:
+            xmlFile = service['SCPDURL']
+        else:
+            xmlFile += service['SCPDURL']
+        service['actions'] = {}
+
+        #Get the XML file that describes this service
+        (xmlHeaders,xmlData) = self.get_xml(xmlFile)
+        if not xmlData:
+            print('Failed to retrieve service descriptor located at:',xmlFile)
+            return False
+
+        try:
+            xmlRoot = xml.dom.minidom.parseString(xmlData)
+
+            #Get a list of actions for this service
+            try:
+                actionList = xmlRoot.getElementsByTagName(actionList)[0]
+            except:
+                print('Failed to retrieve action list for service %s!' % service['fullName'])
+                return False
+            actions = actionList.getElementsByTagName(actionTag)
+            if actions == []:
+                return False
+
+            #Parse all actions in the service's action list
+            for action in actions:
+                #Get the action's name
+                try:
+                    actionName = str(action.getElementsByTagName(nameTag)[0].childNodes[0].data).strip()
+                except:
+                    print('Failed to obtain service action name (%s)!' % service['fullName'])
+                    continue
+
+                #Add the action to the ENUM_HOSTS dictonary
+                service['actions'][actionName] = {}
+                service['actions'][actionName]['arguments'] = {}
+
+                #Parse all of the action's arguments
+                try:
+                    argList = action.getElementsByTagName(argumentList)[0]
+                except:
+                    #Some actions may take no arguments, so continue without raising an error here...
+                    continue
+
+                #Get all the arguments in this action's argument list
+                arguments = argList.getElementsByTagName(argumentTag)
+                if arguments == []:
+                    if self.verbose:
+                        print('Action',actionName,'has no arguments!')
+                    continue
+
+                #Loop through the action's arguments, appending them to the ENUM_HOSTS dictionary
+                for argument in arguments:
+                    try:
+                        argName = str(argument.getElementsByTagName(nameTag)[0].childNodes[0].data)
+                    except:
+                        print('Failed to get argument name for',actionName)
+                        continue
+                    service['actions'][actionName]['arguments'][argName] = {}
+
+                    #Get each required argument tag value and add them to ENUM_HOSTS
+                    for tag in argTags:
+                        try:
+                            service['actions'][actionName]['arguments'][argName][tag] = str(argument.getElementsByTagName(tag)[0].childNodes[0].data)
+                        except:
+                            print('Failed to find tag %s for argument %s!' % (tag,argName))
+                            continue
+
+            #Parse all of the state variables for this service
+            self.parseServiceStateVars(xmlRoot,service)
+
+        except Exception as e:
+            print('Caught exception while parsing Service info for service %s: %s' % (service['fullName'],str(e)))
+            return False
+
+        return True
+
+    #Parse the list of services specified in the XML file
+    def parseServiceList(self,xmlRoot,device,index):
+        serviceEntryPointer = False
+        dictName = "services"
+        serviceListTag = "serviceList"
+        serviceTag = "service"
+        serviceNameTag = "serviceType"
+        serviceTags = ["serviceId","controlURL","eventSubURL","SCPDURL"]
+
+        try:
+            device[dictName] = {}
+            #Get a list of all services offered by this device
+            for service in xmlRoot.getElementsByTagName(serviceListTag)[0].getElementsByTagName(serviceTag):
+                #Get the full service descriptor
+                serviceName = str(service.getElementsByTagName(serviceNameTag)[0].childNodes[0].data)
+
+                #Get the service name from the service descriptor string
+                serviceDisplayName = self.parseServiceTypeName(serviceName)
+                if not serviceDisplayName:
+                    continue
+
+                #Create new service entry for the device in ENUM_HOSTS
+                serviceEntryPointer = device[dictName][serviceDisplayName] = {}
+                serviceEntryPointer['fullName'] = serviceName
+
+                #Get all of the required service info and add it to ENUM_HOSTS
+                for tag in serviceTags:
+                    serviceEntryPointer[tag] = str(service.getElementsByTagName(tag)[0].childNodes[0].data)
+
+                #Get specific service info about this service
+                self.parseServiceInfo(serviceEntryPointer,index)
+        except Exception as e:
+            print('Caught exception while parsing device service list:', e)
+
+    # Parse device info from the retrieved XML file
+    def parseDeviceInfo(self, xmlRoot,index):
+        deviceEntryPointer = False
+        devTag = "device"
+        deviceType = "deviceType"
+        deviceListEntries = "deviceList"
+        deviceTags = ["friendlyName","modelDescription","modelName","modelNumber","modelURL","presentationURL","UDN","UPC","manufacturer","manufacturerURL"]
+
+        #Find all device entries listed in the XML file
+        for device in xmlRoot.getElementsByTagName(devTag):
+            try:
+                #Get the deviceType string
+                deviceTypeName = str(device.getElementsByTagName(deviceType)[0].childNodes[0].data)
+            except:
+                continue
+
+            #Pull out the action device name from the deviceType string
+            deviceDisplayName = self.parseDeviceTypeName(deviceTypeName)
+            if not deviceDisplayName:
+                continue
+
+            #Create a new device entry for this host in the ENUM_HOSTS structure
+            deviceEntryPointer = self.enum_hosts[index][deviceListEntries][deviceDisplayName] = {}
+            deviceEntryPointer['fullName'] = deviceTypeName
+
+            #Parse out all the device tags for that device
+            for tag in deviceTags:
+                try:
+                    deviceEntryPointer[tag] = str(device.getElementsByTagName(tag)[0].childNodes[0].data)
+                except Exception as e:
+                    if self.verbose:
+                        print('Device',deviceEntryPointer['fullName'],'does not have a', tag)
+                    continue
+            #Get a list of all services for this device listing
+            self.parseServiceList(device,deviceEntryPointer,index)
+
+        return
+
+#Display all info for a given host
+    def showCompleteHostInfo(self,index,fp):
+        na = 'N/A'
+        serviceKeys = ['controlURL','eventSubURL','serviceId','SCPDURL','fullName']
+        if fp == False:
+            fp = sys.stdout
+
+        if index < 0 or index >= len(self.enum_hosts):
+            fp.write('Specified host does not exist...\n')
+            return
+        try:
+            hostInfo = self.enum_hosts[index]
+            if hostInfo['dataComplete'] == False:
+                print("Cannot show all host info because I don't have it all yet. Try running 'host info %d' first...\n" % index)
+            fp.write('Host name:         %s\n' % hostInfo['name'])
+            fp.write('UPNP XML File:     %s\n\n' % hostInfo['xml_file'])
+
+            fp.write('\nDevice information:\n')
+            for deviceName,deviceStruct in hostInfo['deviceList'].items():
+                fp.write('\tDevice Name: %s\n' % deviceName)
+                for serviceName,serviceStruct in deviceStruct['services'].items():
+                    fp.write('\t\tService Name: %s\n' % serviceName)
+                    for key in serviceKeys:
+                        fp.write('\t\t\t%s: %s\n' % (key,serviceStruct[key]))
+                    fp.write('\t\t\tServiceActions:\n')
+                    for actionName,actionStruct in serviceStruct['actions'].items():
+                        fp.write('\t\t\t\t%s\n' % actionName)
+                        for argName,argStruct in actionStruct['arguments'].items():
+                            fp.write('\t\t\t\t\t%s \n' % argName)
+                            for key,val in argStruct.items():
+                                if key == 'relatedStateVariable':
+                                    fp.write('\t\t\t\t\t\t%s:\n' % val)
+                                    for k,v in serviceStruct['serviceStateVariables'][val].items():
+                                        fp.write('\t\t\t\t\t\t\t%s: %s\n' % (k,v))
+                                else:
+                                    fp.write('\t\t\t\t\t\t%s: %s\n' % (key,val))
+
+        except Exception as e:
+            print('Caught exception while showing host info:')
+            traceback.print_stack(e)
+
+        # Wrapper function...
+    def getHostInfo(self, xmlData, xmlHeaders, index):
+        if self.enum_hosts[index]['dataComplete']:
+            return
+
+        if 0 <= index < len(self.enum_hosts):
+            try:
+                xmlRoot = xml.dom.minidom.parseString(xmlData)
+                self.parseDeviceInfo(xmlRoot, index)
+                #self.enum_hosts[index]['serverType'] = xmlHeaders.getheader('Server')
+                self.enum_hosts[index]['serverType'] = xmlHeaders['Server']
+                self.enum_hosts[index]['dataComplete'] = True
+                return True
+            except Exception as e:
+                print('Caught exception while getting host info:')
+                traceback.print_stack(e)
+        return False
 
     def do_exit(self, e):
         return True

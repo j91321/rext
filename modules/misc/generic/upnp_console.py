@@ -89,14 +89,14 @@ UPNP console
                                        host_info['name'] + " (this could take a few seconds)...")
                             if not host_info['dataComplete']:
                                 (xmlHeaders, xmlData) = self.get_xml(host_info['xml_file'])
-                                print(xmlHeaders)
-                                print(xmlData)
+                                #print(xmlHeaders)
+                                #print(xmlData)
                                 if not xmlData:
                                     print_red('Failed to request host XML file:' + host_info['xmlFile'])
                                     return
-                                #if self.getHostInfo(xmlData, xmlHeaders, index) == False:
-                                #    print_error("Failed to get device/service info for " + host_info['name'])
-                                #    return
+                                if self.getHostInfo(xmlData, xmlHeaders, index) == False:
+                                    print_error("Failed to get device/service info for " + host_info['name'])
+                                    return
                             print('Host data enumeration complete!')
                             #hp.updateCmdCompleter(hp.ENUM_HOSTS)
                             return
@@ -117,6 +117,23 @@ UPNP console
                 print_error("Second argument is not a number")
                 return
             self.get_host_info(host_info, index)
+        elif args[0] == "details":
+                try:
+                    index = int(args[1])
+                    hostInfo = self.enum_hosts[index]
+                except Exception as e:
+                    print("Index error")
+                    return
+
+                try:
+                    #If this host data is already complete, just display it
+                    if hostInfo['dataComplete'] == True:
+                        self.showCompleteHostInfo(index,False)
+                    else:
+                        print("Can't show host info because I don't have it. Please run 'host get %d'" % index)
+                except KeyboardInterrupt as e:
+                    pass
+                return
 
 
 
