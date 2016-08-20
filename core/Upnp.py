@@ -14,6 +14,7 @@ import select
 import requests
 import xml.dom.minidom
 import time
+import re
 import traceback
 import sys
 
@@ -40,10 +41,12 @@ class Upnp(cmd.Cmd):
     csock = False
     ssock = False
     mreq = None
+    soapEnd = None
 
     def __init__(self):
         cmd.Cmd.__init__(self)
         interface.utils.change_prompt(self, core.globals.active_module_path + core.globals.active_script)
+        self.soapEnd = re.compile('<\/.*:envelope>')
         self.initialize_sockets()
         self.cmdloop()
 
