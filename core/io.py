@@ -6,7 +6,7 @@
 import datetime
 import os
 import core.globals
-from interface.messages import print_error, print_yellow, print_red
+from interface.messages import print_error, print_info
 
 
 # FIXME: If minute changes between two writes of one module, this will create two directories
@@ -55,11 +55,11 @@ def query_yes_no(question, default="yes"):
         raise ValueError("invalid default answer: '%s'" % default)
 
     while True:
-        print_yellow(question + prompt)
+        print_info(question + prompt)
         choice = input().lower()
         if default is not None and choice == '':
             return valid[default]
         elif choice in valid:
             return valid[choice]
         else:
-            print_red("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
+            print_error("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")

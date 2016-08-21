@@ -20,7 +20,7 @@
 import core.Misc
 import core.io
 from interface.utils import validate_mac, lookup_mac
-from interface.messages import print_success, print_error, print_help, print_green
+from interface.messages import print_success, print_error, print_help, print_info
 
 import re
 import hashlib
@@ -60,12 +60,12 @@ Options:
         if args[0] == "mac":
             if validate_mac(args[1]):
                 self.mac = args[1]
-                print_green("MAC set to: " + self.mac + " " + lookup_mac(self.mac))
+                print_info("MAC set to: " + self.mac + " " + lookup_mac(self.mac))
             else:
                 print_error("provide valid MAC address")
 
     def do_mac(self, e):
-        print(self.mac)
+        print_info(self.mac)
 
     def help_set(self):
         print_help("Set value of variable: \"set mac 00:11:22:33:44:55\"")
@@ -75,10 +75,10 @@ Options:
 
     def do_run(self, e):
         payload = self.keygen()
-        print_success("")
-        print_green("Payload:%s" % (hexlify(payload).decode()))
+        print_success("payload generated")
+        print("Payload:%s" % (hexlify(payload).decode()))
         core.io.writefile(payload, "payload.hex")
-        print_green("Payload saved to payload.hex")
+        print_info("Payload saved to payload.hex")
 
     def keygen(self):
         salt = b'\x04\x07\x67\x10\x02\x81\xFA\x66\x11\x41\x68\x11\x17\x01\x05\x22\x71\x04\x10\x33'

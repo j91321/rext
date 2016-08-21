@@ -10,7 +10,7 @@
 
 import core.Misc
 import core.io
-from interface.messages import print_success, print_error, print_green, print_help
+from interface.messages import print_success, print_error, print_help, print_info
 from interface.utils import validate_mac, lookup_mac
 
 
@@ -39,12 +39,12 @@ Options:
         if args[0] == "mac":
             if validate_mac(args[1]):
                 self.mac = args[1]
-                print_green("MAC set to: " + self.mac + " " + lookup_mac(self.mac))
+                print_info("MAC set to: " + self.mac + " " + lookup_mac(self.mac))
             else:
                 print_error("please provide valid MAC address")
 
     def do_mac(self, e):
-        print(self.mac)
+        print_info(self.mac)
 
     def help_set(self):
         print_help("Set value of variable: \"set mac 00:11:22:33:44:55\"")
@@ -70,8 +70,8 @@ Options:
         key = (10 - accum % 10) % 10
         key = format("%07d%d" % (p, key))
 
-        print_success("")
-        print_green("WPS pin:" + key)
+        print_success("WPS pin generated")
+        print("WPS pin:" + key)
 
 
 Misc()

@@ -13,7 +13,7 @@ import core.Decryptor
 import core.io
 import core.compression.lzo
 
-from interface.messages import print_success, print_green, print_yellow
+from interface.messages import print_success, print_green, print_yellow, print_warning, print_info
 from collections import defaultdict
 from struct import unpack, pack
 import math
@@ -58,13 +58,13 @@ Options:
         """Get raw config data from raw /compressed/encrypted & comressed"""
         g = self.smart_guess(data)
         if g == self.CFG_RAW:
-            print_yellow('File is  :\tnot compressed, not encrypted')
+            print_warning('File is  :\tnot compressed, not encrypted')
             return g, data
         elif g == self.CFG_LZO:
-            print_yellow('File is  :\tcompressed, not encrypted')
+            print_warning('File is  :\tcompressed, not encrypted')
             return g, self.decompress_cfg(data)
         elif g == self.CFG_ENC:
-            print_yellow('File is  :\tcompressed, encrypted')
+            print_warning('File is  :\tcompressed, encrypted')
             return g, self.decompress_cfg(self.decrypt_cfg(data))
 
     def smart_guess(self, data):
@@ -102,7 +102,7 @@ Options:
     def decompress_cfg(self, data):
         """Decompress a config file"""
         modelstr = "V" + format(unpack(">H", self.get_modelid(data))[0], "04X")
-        print_green('Model is :\t' + modelstr)
+        print_info('Model is :\t' + modelstr)
         rawcfgsize = 0x00100000
         lzocfgsize = unpack(">L", data[0x24:0x28])[0]
         raw = data[:0x2D] + b'\x00' + data[0x2E:0x100] + \
@@ -112,13 +112,13 @@ Options:
     def decrypt_cfg(self, data):
         """Decrypt config, bruteforce if default key fails"""
         modelstr = "V" + format(unpack(">H", self.get_modelid(data))[0], "04X")
-        print_green('Model is :\t' + modelstr)
+        print_info('Model is :\t' + modelstr)
         ckey = self.make_key(modelstr)
         rdata = self.decrypt(data[0x100:], ckey)
         # if the decrypted data does not look good, bruteforce
         if self.smart_guess(rdata) != self.CFG_LZO:
             rdata = self.brute_cfg(data[0x100:])
-            print_green('Used key :\t[0x%02X]' % ckey)
+            print_success('Used key :\t[0x%02X]' % ckey)
         return data[:0x2D] + b'\x01' + data[0x2E:0x100] + rdata
 
     def make_key(self, modelstr):
@@ -159,7 +159,7 @@ Options:
             if self.smart_guess(rdata) == self.CFG_LZO:
                 key = i
                 break
-        print_green('Found key:\t[0x%02X]' % key)
+        print_success('Found key:\t[0x%02X]' % key)
         return rdata
 
     def get_credentials(self, data):

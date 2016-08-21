@@ -8,7 +8,7 @@
 # Description: PoC based on 31C3 presentation
 
 import core.Scanner
-from interface.messages import print_failed, print_success, print_red, print_green, print_warning, print_error
+from interface.messages import print_failed, print_success, print_warning, print_error
 
 import requests
 import requests.exceptions
@@ -47,12 +47,12 @@ Options:
             response = requests.get(target, headers=headers, timeout=60)
             if response.status_code != 404:
                 print_failed("Unexpected HTTP status, expecting 404 got: %d" % response.status_code)
-                print_red("Device is not running RomPager")
+                print_warning("Device is not running RomPager")
             else:
                 if 'server' in response.headers:
                     server = response.headers.get('server')
                     if re.search('RomPager', server) is not None:
-                        print_green("Got RomPager! Server:%s" % server)
+                        print_success("Got RomPager! Server:%s" % server)
                         if re.search('omg1337hax', response.text) is not None:
                             print_success("device is vulnerable to misfortune cookie")
                         else:

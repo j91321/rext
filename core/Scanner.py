@@ -7,7 +7,7 @@ import cmd
 
 import core.globals
 import interface.utils
-from interface.messages import print_help, print_error
+from interface.messages import print_help, print_error, print_info
 
 
 class RextScanner(cmd.Cmd):
@@ -42,10 +42,10 @@ class RextScanner(cmd.Cmd):
                 print_error("port value must be integer")
 
     def do_host(self, e):
-        print(self.host)
+        print_info(self.host)
 
     def do_port(self, e):
-        print(self.port)
+        print_info(self.port)
 
     def help_exit(self):
         print_help("Exit script")

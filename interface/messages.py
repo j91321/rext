@@ -32,28 +32,28 @@ else:
         ENDC = ''
 
 
-def print_success(msg):
-    print(Color.GREEN + Color.BOLD + "Success: " + Color.ENDC + Color.GREEN + msg + Color.ENDC)
+def print_success(*args, **kwargs):
+    print(Color.GREEN + Color.BOLD + "[+]" + Color.ENDC, *args, **kwargs)
 
 
-def print_error(msg):
-    print(Color.RED + Color.BOLD + "Error: " + Color.ENDC + Color.RED + msg + Color.ENDC)
+def print_error(*args, **kwargs):
+    print(Color.RED + Color.BOLD + "[-]" + Color.ENDC, *args, **kwargs)
 
 
-def print_failed(msg):
-    print(Color.RED + Color.BOLD + "Failed: " + Color.ENDC + Color.RED + msg + Color.ENDC)
+def print_failed(*args, **kwargs):
+    print(Color.RED + Color.BOLD + "[-]" + Color.ENDC, *args, **kwargs)
 
 
-def print_warning(msg):
-    print(Color.YELLOW + Color.BOLD + "Warning: " + Color.ENDC + Color.YELLOW + msg + Color.ENDC)
+def print_warning(*args, **kwargs):
+    print(Color.YELLOW + Color.BOLD + "[!]" + Color.ENDC, *args, **kwargs)
 
 
-def print_help(msg):
-    print(Color.PURPLE + Color.BOLD + "Help: " + Color.ENDC + Color.PURPLE + msg + Color.ENDC)
+def print_help(*args, **kwargs):
+    print(Color.PURPLE + Color.BOLD + "[?]" + Color.ENDC, *args, **kwargs)
 
 
-def print_info(msg):
-    print(Color.BLUE + Color.BOLD + "Info: " + Color.ENDC + Color.BLUE + msg + Color.ENDC)
+def print_info(*args, **kwargs):
+    print(Color.BLUE + Color.BOLD + "[*]" + Color.ENDC, *args, **kwargs)
 
 
 def print_green(msg):

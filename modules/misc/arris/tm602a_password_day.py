@@ -12,7 +12,7 @@
 
 import core.Misc
 import core.io
-from interface.messages import print_success, print_help, print_purple, print_green
+from interface.messages import print_success, print_help, print_info
 
 import datetime
 import math
@@ -50,23 +50,23 @@ Options:
             self.end_date = args[1]
 
     def do_start(self, e):
-        print(self.start_date)
+        print_info(self.start_date)
 
     def do_end(self, e):
-        print(self.end_date)
+        print_info(self.end_date)
 
     def help_set(self):
         print_help("Set value of variable: \"set start 2015-06-01\"")
 
     def help_start(self):
         print_help("Prints value of variable start_date")
-        print_purple("In this module both start and end date must be specified!")
-        print_purple("Password for date in end_date is not generated! (Not inclusive loop)")
+        print("In this module both start and end date must be specified!")
+        print("Password for date in end_date is not generated! (Not inclusive loop)")
 
     def help_end(self):
         print_help("Prints value of variable end_date")
-        print_purple("In this module both start and end date must be specified!")
-        print_purple("Password for date in end_date is not generated! (Not inclusive loop)")
+        print("In this module both start and end date must be specified!")
+        print("Password for date in end_date is not generated! (Not inclusive loop)")
 
     def do_run(self, e):
         self.generate_arris_password(self.start_date, self.end_date)
@@ -134,8 +134,8 @@ Options:
             for i in range(10):
                 password_list[i] = alphanum[list5[i]]
             password = "".join(password_list)
-            print_success("")
-            print_green("Date: " + single_date.date().isoformat() + " Password:" + password)
+            print_success("password generated")
+            print("Date: " + single_date.date().isoformat() + " Password:" + password)
 
 
 def daterange(start_date, end_date):

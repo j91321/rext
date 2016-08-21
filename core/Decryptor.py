@@ -7,7 +7,7 @@ import cmd
 
 import core.globals
 import interface.utils
-from interface.messages import print_error, print_help
+from interface.messages import print_error, print_help, print_info
 
 
 class RextDecryptor(cmd.Cmd):
@@ -39,7 +39,7 @@ class RextDecryptor(cmd.Cmd):
             print_error("please specify value for variable")
 
     def do_file(self, e):
-        print(self.input_file)
+        print_info(self.input_file)
 
     def help_exit(self):
         print_help("Exit script")
