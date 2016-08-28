@@ -20,13 +20,13 @@ class RextMisc(cmd.Cmd):
     def do_info(self, e):
         print(self.__doc__)
 
-    def do_exit(self, e):
+    def do_back(self, e):
         return True
 
     def do_run(self, e):
         pass
 
-    def help_exit(self):
+    def help_back(self):
         print_help("Exit script")
 
     def help_run(self):
