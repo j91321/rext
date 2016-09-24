@@ -24,7 +24,7 @@ import sys
 
 import core.globals
 import interface.utils
-from interface.messages import print_error, print_help, print_info, print_warning, print_red, print_yellow, \
+from interface.messages import print_error, print_help, print_info, print_warning, print_red, \
     print_success
 
 
@@ -622,12 +622,8 @@ class Upnp(cmd.Cmd):
                 traceback.print_stack(e)
         return False
 
-    def do_exit(self, e):
+    def do_back(self, e):
         return True
-
-    def do_run(self, e):
-        self.cleanup()
-        pass
 
     def do_set(self, e):
         args = e.split(' ')
@@ -645,6 +641,12 @@ class Upnp(cmd.Cmd):
         except IndexError:
             print_error("please specify value for variable")
 
+    def complete_set(self, text, line, begidx, endidx):
+        modules = ["host", "port"]
+        module_line = line.partition(' ')[2]
+        igon = len(module_line) - len(text)
+        return [s[igon:] for s in modules if s.startswith(module_line)]
+
     def do_info(self, e):
         print(self.__doc__)
 
@@ -654,11 +656,8 @@ class Upnp(cmd.Cmd):
     def do_port(self, e):
         print_info(str(self.port))
 
-    def help_exit(self):
+    def help_back(self):
         print_help("Exit script")
-
-    def help_run(self):
-        print_help("Run script")
 
     def help_host(self):
         print_help("Prints current value of host")
@@ -706,8 +705,34 @@ class Upnp(cmd.Cmd):
 
     def help_add(self):
         print_help("Allows you to manually add device (e.g. shodan search result)")
-        print("\t usage:add [device name] [device xml root]")
+        print("\tusage:add [device name] [device xml root]")
         print("\texample: add 192.168.1.2:49152 http://192.168.1.2:49152/description.xml")
+
+    def help_pcap(self):
+        print_help("Passively listens for SSDP NOTIFY messages from UPNP devices")
+
+    # Passively listen for UPNP NOTIFY packets
+    def do_pcap(self, e):
+        print_info('Entering passive mode, Ctrl+C')
+
+        count = 0
+        start = time.time()
+
+        while True:
+            try:
+                if 0 < self.max_hosts <= count:
+                    break
+
+                if 0 < self.timeout < (time.time() - start):
+                    raise Exception("Timeout exceeded")
+
+                if self.parse_ssdp_info(self.recieve(1024, False), False, False):
+                    count += 1
+
+            except Exception as e:
+                print("\n")
+                print_info("Passive mode halted...")
+                break
 
     def do_msearch(self, e):
         default_st = "upnp:rootdevice"
@@ -768,7 +793,7 @@ class Upnp(cmd.Cmd):
         if host_info is not None:
             # If this host data is already complete, just display it
             if host_info['dataComplete']:
-                print_yellow('Data for this host has already been enumerated!')
+                print_warning('Data for this host has already been enumerated!')
                 return
             try:
                 # Get extended device and service information
@@ -780,7 +805,7 @@ class Upnp(cmd.Cmd):
                         # print(xmlHeaders)
                         # print(xmlData)
                         if not xml_data:
-                            print_red('Failed to request host XML file:' + host_info['xml_file'])
+                            print_error('Failed to request host XML file:' + host_info['xml_file'])
                             return
                         if not self.get_host_information(xml_data, xml_headers, index):
                             print_error("Failed to get device/service info for " + host_info['name'])
@@ -935,7 +960,7 @@ class Upnp(cmd.Cmd):
         args = e.split(' ')
         if args[0] == "get":
             if len(args) != 2:
-                print_red("Invalid number of arguments")
+                print_error("Invalid number of arguments")
                 return
             try:
                 index = int(args[1])
@@ -973,7 +998,7 @@ class Upnp(cmd.Cmd):
                 index = int(args[1])
                 host_info = self.enum_hosts[index]
             except:
-                print("Index error")
+                print_error("Please provide correct device id")
                 return
 
             print('Host:', host_info['name'])
@@ -1074,7 +1099,7 @@ class Upnp(cmd.Cmd):
                         action_state_var]
 
                     if argVals['direction'].lower() == 'in':
-                        print("Required argument:")
+                        print_info("Required argument:")
                         print("\tArgument Name: ", argName)
                         print("\tData Type:     ", state_var['dataType'])
                         if 'allowedValueList' in state_var:
@@ -1089,7 +1114,7 @@ class Upnp(cmd.Cmd):
                             # Get user input for the argument value
                             (argc, argv) = self.getUserInput(prompt)
                             if argv is None:
-                                print('Stopping send request...')
+                                print_warning('Stopping send request...')
                                 return
                             u_input = ''
 
@@ -1133,5 +1158,37 @@ class Upnp(cmd.Cmd):
                         print(tag, ':', tag_value)
             return
 
+    # Creates dictionary structure from host_enum data if data enumeration was completed
+    def parse_device_autocomplete(self, index):
+        autocomplete_structure = {}
+        host = self.enum_hosts[index]
+        if host['dataComplete']:
+            try:
+                for device, deviceData in host['deviceList'].items():
+                    autocomplete_structure[device] = {}
+                    for service, serviceData in deviceData['services'].items():
+                        autocomplete_structure[device][service] = {}
+                        for action, actionData in serviceData['actions'].items():
+                            autocomplete_structure[device][service][action] = []
+            except KeyError:
+                print_error("Error in autocomplete")
+        return autocomplete_structure
+
+    def complete_device(self, text, line, begidx, endidx):
+        number_of_hosts = range(len(self.enum_hosts))
+        complete_dict = {'get': number_of_hosts, 'info': number_of_hosts,
+                   'summarny': number_of_hosts, 'list': [],
+                   'details': number_of_hosts, 'send': number_of_hosts}
+
+        # Trick for finding integers in string
+        # Maybe I should also check if send command is actually present
+        # but index of device is always last argument in command except send command
+        index = [int(s) for s in line.split() if s.isdigit()]
+        if index:
+            complete_dict['send'] = {index[0]: self.parse_device_autocomplete(index[0])}
+        complete_array = interface.utils.dict_to_str(complete_dict)
+        complete_line = line.partition(' ')[2]
+        igon = len(complete_line) - len(text)
+        return [s[igon:] for s in complete_array if s.startswith(complete_line)]
 
 Upnp()

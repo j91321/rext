@@ -117,3 +117,21 @@ def wget(url, path):
 
     return path
 
+
+# Used for autocomplete, autocomplete of cmd expects simple list of all possibilities, but it's easier to define
+# all menu options as data structure of nested dictionaries and lists
+def dict_to_str(input):
+    output = []
+    for key in input.keys():
+        items = input.get(key)
+        if isinstance(items, dict):
+            new_list = dict_to_str(items)
+            for item in new_list:
+                output.append(''.join('{} {}'.format(key, str(item))))
+        elif isinstance(items, list) or isinstance(items, range):
+            if len(items) == 0:
+                output.append(''.join('{}'.format(key)))
+            else:
+                for item in items:
+                    output.append(''.join('{} {}'.format(key, str(item))))
+    return output
