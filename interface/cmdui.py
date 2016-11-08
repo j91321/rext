@@ -22,13 +22,14 @@ class Interpreter(cmd.Cmd):
 
     def __init__(self, stdout=sys.stdout):
         loader.check_dependencies()
+        loader.check_create_dirs()
         core.globals.ouidb_conn = loader.open_database("./databases/oui.db")
         if core.globals.ouidb_conn is None:
             print_error("OUI database could not be open, please provide OUI database")
         cmd.Cmd.__init__(self, stdout=stdout)  # stdout had to be added for tests
         self.prompt = ">"
         # Load banner
-        with open("./interface/banner.txt", "r") as file:
+        with open("./interface/banner.txt", "r", encoding="utf-8") as file:
             banner = ""
             for line in file.read():
                 banner += line
