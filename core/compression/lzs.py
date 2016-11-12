@@ -46,7 +46,7 @@ class BitReader:
 
     def getBits(self, num):
         res = 0
-        for i in range(num):    # TODO I think here is the main culprit
+        for i in range(num):
             res += self.getBit() << num-1-i
         return res
 
@@ -97,13 +97,13 @@ def LZSDecompress(data, window=RingList(2048)):
     string and the final dictionary
     """
     reader = BitReader(data)
-    result = b''
+    result = bytearray()
 
     while True:
         bit = reader.getBit()
         if not bit:
             char = reader.getByte()
-            result += bytes([char])
+            result.append(char)
             window.append(char)  # ERR: Something is wrong in this ring list
         else:
             bit = reader.getBit()
@@ -131,14 +131,14 @@ def LZSDecompress(data, window=RingList(2048)):
                         lenCounter += 1
                     lenght = 15*lenCounter + 8 + lenField
 
-            for i in range(lenght):  # TODO Fix this shit
-                print(window.size())
-                print("Length:", lenght)
-                print("i:", i)
-                print("deq:", window.get())
-                print("size:", window.size())
+            for i in range(lenght):
+                #print(window.size())
+                #print("Length:", lenght)
+                #print("i:", i)
+                #print("deq:", window.get())
+                #print("size:", window.size())
                 char = window[-offset]
-                result += char
+                result.append(char)
                 window.append(char)
 
     return result, window

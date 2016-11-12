@@ -7,6 +7,7 @@ import os
 import re
 import socket
 import sys
+import string
 import urllib
 import urllib.request
 import core.globals
@@ -75,9 +76,9 @@ def list_files(path):
     return files
 
 
-def make_import_name(string):
-    string = "modules." + string
-    return re.sub('/', '.', string)
+def make_import_name(input_value):
+    input_value = "modules." + input_value
+    return re.sub('/', '.', input_value)
 
 
 def change_prompt(interpreter, path):
@@ -120,10 +121,10 @@ def wget(url, path):
 
 # Used for autocomplete, autocomplete of cmd expects simple list of all possibilities, but it's easier to define
 # all menu options as data structure of nested dictionaries and lists
-def dict_to_str(input):
+def dict_to_str(input_value):
     output = []
-    for key in input.keys():
-        items = input.get(key)
+    for key in input_value.keys():
+        items = input_value.get(key)
         if isinstance(items, dict):
             new_list = dict_to_str(items)
             for item in new_list:
@@ -135,3 +136,19 @@ def dict_to_str(input):
                 for item in items:
                     output.append(''.join('{} {}'.format(key, str(item))))
     return output
+
+
+# Takes bytearray as argument and searches for all strings that are 4 letters or more in length
+# works similar to unix strings program
+def strings(input_array, minimum=4):
+    result = ""
+    for c in input_array:
+        char = chr(c)
+        if char in string.digits or char in string.ascii_letters or char in string.punctuation:
+            result += char
+            continue
+        if len(result) >= minimum:
+            yield result
+        result = ""
+    if len(result) >= minimum:
+        yield result
