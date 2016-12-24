@@ -50,6 +50,9 @@ class RextHarvester(cmd.Cmd):
         igon = len(module_line) - len(text)
         return [s[igon:] for s in modules if s.startswith(module_line)]
 
+    def help_set(self):
+        print_help("Set value of variable: \"set host 192.168.1.1\"")
+
     def help_back(self):
         print_help("Exit script")
 

@@ -58,6 +58,9 @@ def check_dependencies():
             break
         # FIXME this is not the best way to parse dependencies probably, may break rext if == is used
         dependency = dependency[:dependency.find('>=')]
+        # FIXME beautifulsoup4 is imported as bs4
+        if dependency == 'beautifulsoup4':
+            dependency = 'bs4'
         found = importlib.util.find_spec(dependency)
         if found is None:
             print_warning(dependency + " not found some modules may not work!")
