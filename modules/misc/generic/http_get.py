@@ -1,5 +1,5 @@
 # Name:Send GET HTTP and print response.
-# File:http_ping.py
+# File:http_get.py
 # Author:Ján Trenčanský
 # License: GNU GPL v3
 # Created: 27.12.2015
@@ -12,13 +12,13 @@ import core.io
 
 import requests
 import interface.utils
-from interface.messages import print_error, print_yellow, print_green, print_help
+from interface.messages import print_error, print_help, print_info, print_warning
 
 
 class Exploit(core.Exploit.RextExploit):
     """
 Name:Send GET HTTP and print response.
-File:http_ping.py
+File:http_get.py
 Author:Ján Trenčanský
 License: GNU GPL v3
 Created: 27.12.2015
@@ -70,15 +70,15 @@ Options:
 
     def do_body(self, e):
         if self.body is True:
-            print("yes")
+            print_info("yes")
         else:
-            print("no")
+            print_info("no")
 
     def do_ssl(self, e):
         if self.ssl is True:
-            print("yes")
+            print_info("yes")
         else:
-            print("no")
+            print_info("no")
 
     def help_body(self):
         print_help("print response body? yes/no")
@@ -92,14 +92,14 @@ Options:
         else:
             url = "https://%s:%s" % (self.host, self.port)
         try:
-            print_yellow("Sending GET request")
+            print_warning("Sending GET request")
             response = requests.get(url, timeout=60, verify=False)
-            print_green("[%s %s] %s" % (response.status_code, response.reason, response.url))
+            print("[%s %s] %s" % (response.status_code, response.reason, response.url))
             for header in response.headers:
-                print_green("%s: %s" % (header, response.headers.get(header)))
+                print("%s: %s" % (header, response.headers.get(header)))
             if self.body is True:
                 print("\n")
-                print_green(response.text)
+                print(response.text)
         except requests.ConnectionError as e:
             print_error("connection error %s" % e)
         except requests.Timeout:

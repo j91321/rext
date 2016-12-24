@@ -18,22 +18,22 @@ class MessagesTest(unittest.TestCase):
         # mock_utils.return_value = "posix"
         test_string = "Hello World"
         interface.messages.print_success(test_string)
-        mock_builtins.assert_called_with("\033[32m\033[1mSuccess: \033[0m\033[32m%s\033[0m" % test_string)
+        mock_builtins.assert_called_with("\033[32m\033[1m[+]\033[0m", test_string)
 
         interface.messages.print_error(test_string)
-        mock_builtins.assert_called_with("\033[91m\033[1mError: \033[0m\033[91m%s\033[0m" % test_string)
+        mock_builtins.assert_called_with("\033[91m\033[1m[-]\033[0m", test_string)
 
         interface.messages.print_warning(test_string)
-        mock_builtins.assert_called_with("\033[93m\033[1mWarning: \033[0m\033[93m%s\033[0m" % test_string)
+        mock_builtins.assert_called_with("\033[93m\033[1m[!]\033[0m", test_string)
 
         interface.messages.print_failed(test_string)
-        mock_builtins.assert_called_with("\033[91m\033[1mFailed: \033[0m\033[91m%s\033[0m" % test_string)
+        mock_builtins.assert_called_with("\033[91m\033[1m[-]\033[0m", test_string)
 
         interface.messages.print_help(test_string)
-        mock_builtins.assert_called_with("\033[95m\033[1mHelp: \033[0m\033[95m%s\033[0m" % test_string)
+        mock_builtins.assert_called_with("\033[95m\033[1m[?]\033[0m", test_string)
 
         interface.messages.print_info(test_string)
-        mock_builtins.assert_called_with("\033[94m\033[1mInfo: \033[0m\033[94m%s\033[0m" % test_string)
+        mock_builtins.assert_called_with("\033[94m\033[1m[*]\033[0m", test_string)
 
         interface.messages.print_green(test_string)
         mock_builtins.assert_called_with("\033[32m%s\033[0m" % test_string)

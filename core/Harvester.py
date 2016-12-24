@@ -19,7 +19,7 @@ class RextHarvester(cmd.Cmd):
         interface.utils.change_prompt(self, core.globals.active_module_path + core.globals.active_script)
         self.cmdloop()
 
-    def do_exit(self, e):
+    def do_back(self, e):
         return True
 
     def do_info(self, e):
@@ -44,7 +44,16 @@ class RextHarvester(cmd.Cmd):
         except IndexError:
             print_error("please specify value for variable")
 
-    def help_exit(self):
+    def complete_set(self, text, line, begidx, endidx):
+        modules = ["host", "port"]
+        module_line = line.partition(' ')[2]
+        igon = len(module_line) - len(text)
+        return [s[igon:] for s in modules if s.startswith(module_line)]
+
+    def help_set(self):
+        print_help("Set value of variable: \"set host 192.168.1.1\"")
+
+    def help_back(self):
         print_help("Exit script")
 
     def help_run(self, e):

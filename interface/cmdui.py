@@ -10,7 +10,7 @@ import interface.utils
 import core.globals
 from core import loader
 from core import updater
-from interface.messages import print_error, print_help, print_blue, print_purple
+from interface.messages import print_error, print_help, print_info, print_success
 
 
 class Interpreter(cmd.Cmd):
@@ -22,13 +22,14 @@ class Interpreter(cmd.Cmd):
 
     def __init__(self, stdout=sys.stdout):
         loader.check_dependencies()
+        loader.check_create_dirs()
         core.globals.ouidb_conn = loader.open_database("./databases/oui.db")
         if core.globals.ouidb_conn is None:
             print_error("OUI database could not be open, please provide OUI database")
         cmd.Cmd.__init__(self, stdout=stdout)  # stdout had to be added for tests
         self.prompt = ">"
         # Load banner
-        with open("./interface/banner.txt", "r") as file:
+        with open("./interface/banner.txt", "r", encoding="utf-8") as file:
             banner = ""
             for line in file.read():
                 banner += line
@@ -119,18 +120,18 @@ class Interpreter(cmd.Cmd):
     def do_update(self, e):
         args = e.split(' ')
         if args[0] == "oui":
-            print_blue("Updating OUI DB. Database rebuild may take several minutes.")
+            print_info("Updating OUI DB. Database rebuild may take several minutes.")
             # print_blue("Do you wish to continue? (y/n)")
             # Add if here
             updater.update_oui()
-            print_blue("OUI database updated successfully.")
+            print_success("OUI database updated successfully.")
         elif args[0] == "force":
-            print_blue("Discarding local changes and updating REXT")
+            print_info("Discarding local changes and updating REXT")
             updater.update_rext_force()
         elif args[0] == "":
-            print_blue("Updating REXT please wait...")
+            print_info("Updating REXT please wait...")
             updater.update_rext()
-            print_blue("Update successful")
+            print_success("Update successful")
 
     # autocomplete section
     def complete_load(self, text, line, begidx, endidx):
@@ -152,12 +153,12 @@ class Interpreter(cmd.Cmd):
 
     def help_load(self):
         print_help("load module")
-        print_purple("Usage: load <path>")
+        print("Usage: load <path>")
 
     def help_update(self):  # Recreate this with python formatter
         print_help("update REXT functionality")
-        print_purple("Usage: update <argument>")
-        print_purple("Available arguments:\n"
+        print("Usage: update <argument>")
+        print("Available arguments:\n"
                      "\tno argument\n\t\tupdate REXT using git\n"
                      "\toui\n\t\tupdate MAC vendor database\n"
                      "\tforce\n\t\tdo git reset --hard and update\n")

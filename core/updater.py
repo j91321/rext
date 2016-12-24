@@ -11,7 +11,7 @@ import sys
 
 import interface.utils
 import core.globals
-from interface.messages import print_blue, print_error
+from interface.messages import print_error, print_info
 
 
 # Pull REXT from git repo
@@ -33,7 +33,7 @@ def update_oui():
             connection = core.globals.ouidb_conn
             cursor = connection.cursor()
             # Truncate database
-            print_blue("Truncating oui table")
+            print_info("Truncating oui table")
             cursor.execute("""DROP TABLE oui""")
             cursor.execute("""CREATE TABLE oui (
                              id INTEGER PRIMARY KEY NOT NULL,
@@ -44,7 +44,7 @@ def update_oui():
             # BEGIN guarantees that only one transaction will be used.
             # Now the DB rebuild should take only seconds
             cursor.execute('begin')
-            print_blue("Downloading new OUI file")
+            print_info("Downloading new OUI file")
             path = interface.utils.wget("http://standards.ieee.org/regauth/oui/oui.txt", "./output/tmp_oui.txt")
             if not path:
                 print_error('Failed to download')

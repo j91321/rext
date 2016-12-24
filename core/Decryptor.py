@@ -7,7 +7,7 @@ import cmd
 
 import core.globals
 import interface.utils
-from interface.messages import print_error, print_help
+from interface.messages import print_error, print_help, print_info
 
 
 class RextDecryptor(cmd.Cmd):
@@ -18,7 +18,7 @@ class RextDecryptor(cmd.Cmd):
         interface.utils.change_prompt(self, core.globals.active_module_path + core.globals.active_script)
         self.cmdloop()
 
-    def do_exit(self, e):
+    def do_back(self, e):
         return True
 
     def do_info(self, e):
@@ -38,10 +38,16 @@ class RextDecryptor(cmd.Cmd):
         except IndexError:
             print_error("please specify value for variable")
 
-    def do_file(self, e):
-        print(self.input_file)
+    def complete_set(self, text, line, begidx, endidx):
+        modules = ["file"]
+        module_line = line.partition(' ')[2]
+        igon = len(module_line) - len(text)
+        return [s[igon:] for s in modules if s.startswith(module_line)]
 
-    def help_exit(self):
+    def do_file(self, e):
+        print_info(self.input_file)
+
+    def help_back(self):
         print_help("Exit script")
 
     def help_run(self):

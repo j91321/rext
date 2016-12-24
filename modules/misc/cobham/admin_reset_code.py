@@ -13,7 +13,7 @@ import hashlib
 
 import core.Misc
 import core.io
-from interface.messages import print_green, print_help
+from interface.messages import print_help, print_info
 
 
 class Misc(core.Misc.RextMisc):
@@ -42,16 +42,16 @@ Options:
         args = e.split(' ')
         if args[0] == "serial":
             self.serial = args[1]
-            print_green("Serial number set to: " + self.serial)
+            print_info("Serial number set to: " + self.serial)
 
     def do_run(self, e):
         m = hashlib.md5()
         m.update(bytearray.fromhex(self.serial) + b'\x00'*12 + "kdf04rasdfKKduzA".encode('utf-8'))
         code = m.hexdigest()
-        print_green("Reset code: " + code)
+        print("Reset code: " + code)
 
     def do_serial(self, e):
-        print(self.serial)
+        print_info(self.serial)
 
     def help_set(self):
         print_help("Set value of variable: \"set serial 12345678\"")

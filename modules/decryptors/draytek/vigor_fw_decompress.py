@@ -12,7 +12,7 @@ import core.Decryptor
 import core.io
 import core.compression.lzo
 
-from interface.messages import print_error, print_success, print_green, print_warning
+from interface.messages import print_error, print_success, print_warning, print_info
 from struct import unpack, pack
 import os
 
@@ -57,7 +57,7 @@ Options:
             sigstart = data.find(b'\x5A\x5A\xA5\x5A\xA5\x5A')
         # Compressed FW block found, now decompress
         if sigstart > 0:
-            print_green('Signature found at [0x%08X]' % sigstart)
+            print_info('Signature found at [0x%08X]' % sigstart)
             lzosizestart = sigstart + 6
             lzostart = lzosizestart + 4
             lzosize = unpack('>L', bytes(data[lzosizestart:lzostart]))[0]
@@ -70,13 +70,13 @@ Options:
     def decompress_fs_only(self, data, path):
         """Decompress filesystem"""
         fsstart = unpack('>L', data[:4])[0]
-        print_green('FS block start at: %d [0x%08X]' % (fsstart, fsstart))
+        print_info('FS block start at: %d [0x%08X]' % (fsstart, fsstart))
         return self.decompress_fs(data[fsstart:], path)
 
     def decompress_fs(self, data, path):
         """Decompress filesystem"""
         lzofsdatalen = unpack('>L', data[4:8])[0]
-        print_green('Compressed FS length: %d [0x%08X]' % (lzofsdatalen, lzofsdatalen))
+        print_info('Compressed FS length: %d [0x%08X]' % (lzofsdatalen, lzofsdatalen))
         # stupid assumption of raw FS length. Seems OK for now
         fsdatalen = 0x800000
         fs_raw = core.compression.lzo.pydelzo.decompress(b'\xF0' + pack(">L", fsdatalen)
@@ -149,7 +149,7 @@ class fs:
         ff.write(rawfdata)
         ff.close()
         # print some debug info for each file
-        print_green('%08X "' % ds + fname + '" %08X' % fs + ' %08X' % rawfs)
+        print_info('%08X "' % ds + fname + '" %08X' % fs + ' %08X' % rawfs)
         return fs, rawfs
 
     def save_all(self, path):

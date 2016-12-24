@@ -15,7 +15,7 @@ import core.Decryptor
 import core.io
 
 
-from interface.messages import print_green
+from interface.messages import print_success
 import struct
 import zlib
 import re
@@ -48,7 +48,7 @@ Options:
         data = f.read()
         f.close()
         core.io.writefile(self.extract_config_xml(data), "config.xml")
-        print_green("Config.bin extracted to config.xml")
+        print_success("Config.bin extracted to config.xml")
 
     def extract_config_xml(self, config_bin):
         config_xml = b''
