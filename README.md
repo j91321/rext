@@ -31,6 +31,7 @@ Requirements
 I am trying to keep the requirements minimal:
 
 - requests
+- paramiko
 
 License
 =======

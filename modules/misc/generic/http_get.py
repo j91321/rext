@@ -1,5 +1,5 @@
 # Name:Send GET HTTP and print response.
-# File:http_ping.py
+# File:http_get.py
 # Author:Ján Trenčanský
 # License: GNU GPL v3
 # Created: 27.12.2015
@@ -18,7 +18,7 @@ from interface.messages import print_error, print_help, print_info, print_warnin
 class Exploit(core.Exploit.RextExploit):
     """
 Name:Send GET HTTP and print response.
-File:http_ping.py
+File:http_get.py
 Author:Ján Trenčanský
 License: GNU GPL v3
 Created: 27.12.2015
